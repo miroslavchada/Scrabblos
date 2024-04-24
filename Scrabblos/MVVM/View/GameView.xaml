@@ -6,13 +6,23 @@
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Background="DarkSeaGreen">
+             Background="DarkSeaGreen"
+             Loaded="GameView_OnLoaded"
+             Unloaded="GameView_OnUnloaded">
     <Grid Name="GameGrid">
-        <TextBlock Text="GAME GRID"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontWeight="SemiBold"
-                   FontSize="24"
-                   Foreground="White"></TextBlock>
+        <StackPanel>
+            <Button Content="Home"
+                    Command="{Binding NavigateToHomeCommand}"
+                    Width="80"
+                    Height="24"/>
+
+            <TextBlock Text="GAME GRID"
+                       TextAlignment="Center"
+                       FontWeight="SemiBold"
+                       FontSize="24"
+                       Foreground="White"></TextBlock>
+
+            <TextBlock Name="TbPressed"></TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>
