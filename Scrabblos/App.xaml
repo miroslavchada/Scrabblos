@@ -1,0 +1,16 @@
+﻿<Application x:Class="Scrabblos.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Scrabblos"
+             xmlns:viewModel="clr-namespace:Scrabblos.MVVM.ViewModel"
+             xmlns:view="clr-namespace:Scrabblos.MVVM.View">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+            <view:HomeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:GameViewModel}">
+            <view:GameView/>
+        </DataTemplate>
+    </Application.Resources>
+</Application>

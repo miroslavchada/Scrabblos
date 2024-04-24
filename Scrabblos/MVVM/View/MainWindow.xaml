@@ -1,0 +1,14 @@
+﻿<Window x:Class="Scrabblos.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Scrabblos"
+        mc:Ignorable="d"
+        Title="CHADA - Scrabblos" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="MainWindow_OnKeyDown">
+    <Grid>
+        <ContentControl Content="{Binding Navigation.CurrentView}"></ContentControl>
+    </Grid>
+</Window>
