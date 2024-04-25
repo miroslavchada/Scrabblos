@@ -3,15 +3,12 @@ using Scrabblos.Services;
 
 namespace Scrabblos.MVVM.ViewModel;
 
-internal class GameViewModel : Core.ViewModel
-{
+internal class GameViewModel : Core.ViewModel {
     private INavigationService _navigation;
 
-    public INavigationService Navigation
-    {
+    public INavigationService Navigation {
         get => _navigation;
-        set
-        {
+        set {
             _navigation = value;
             OnPropertyChanged();
         }
@@ -19,8 +16,7 @@ internal class GameViewModel : Core.ViewModel
 
     public RelayCommand NavigateToHomeCommand { get; set; } // Příkaz pro přepnutí View
 
-    public GameViewModel(INavigationService navService)
-    {
+    public GameViewModel(INavigationService navService) {
         Navigation = navService;
         NavigateToHomeCommand = new RelayCommand(o => { Navigation.NavigateTo<HomeViewModel>(); }, o => true); // Definování příkazu
     }

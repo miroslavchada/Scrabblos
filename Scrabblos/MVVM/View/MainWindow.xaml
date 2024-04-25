@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scrabblos"
         mc:Ignorable="d"
-        Title="CHADA - Scrabblos" Height="450" Width="800"
+        Title="CHADA - Scrabblos" Height="747" Width="960"
         WindowStartupLocation="CenterScreen"
-        KeyDown="MainWindow_OnKeyDown">
+        WindowState="Maximized" ResizeMode="NoResize"
+        WindowStyle="None"
+        KeyDown="MainWindow_OnKeyDown" Icon="/MVVM/View/mirek.ico">
     <Grid>
         <ContentControl Content="{Binding Navigation.CurrentView}"></ContentControl>
     </Grid>
