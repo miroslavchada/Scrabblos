@@ -5,24 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="1080" d:DesignWidth="1920"
              Background="DarkSeaGreen"
              Loaded="GameView_OnLoaded"
              Unloaded="GameView_OnUnloaded">
     <Grid Name="GameGrid">
-        <StackPanel>
-            <Button Content="Home"
-                    Command="{Binding NavigateToHomeCommand}"
-                    Width="80"
-                    Height="24"/>
+        <Viewbox>
+            <Border Height="720" Width="960"
+                    BorderBrush="White" BorderThickness="2">
+                <StackPanel Margin="0 36">
+                    <TextBlock Text="GAME GRID"
+                        TextAlignment="Center"
+                        FontWeight="SemiBold" FontSize="24"
+                        Foreground="White"></TextBlock>
 
-            <TextBlock Text="GAME GRID"
-                       TextAlignment="Center"
-                       FontWeight="SemiBold"
-                       FontSize="24"
-                       Foreground="White"></TextBlock>
+                    <TextBlock Name="TbPressed"
+                        FontSize="24"/>
 
-            <TextBlock Name="TbPressed"></TextBlock>
-        </StackPanel>
+                    <Button Content="Home"
+                        Command="{Binding NavigateToHomeCommand}"
+                        Height="28" Width="100"
+                        FontSize="16"
+                        Margin=" 0 24 0 0 "/>
+                </StackPanel>
+            </Border>
+        </Viewbox>
     </Grid>
 </UserControl>

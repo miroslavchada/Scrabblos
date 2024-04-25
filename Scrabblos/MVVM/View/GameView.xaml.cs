@@ -20,9 +20,8 @@ public partial class GameView : UserControl {
         MainWindow.Instance.OnAnyKeyDown -= OnAnyKeyDown;
     }
 
-    private void OnAnyKeyDown(Key key)
-    {
+    private void OnAnyKeyDown(Key key) {
+        TbPressed.Text = $"Zmáčknuté tlačítko: {key}";
         MessageBox.Show(key.ToString());
-        TbPressed.Text = key.ToString();
     }
 }

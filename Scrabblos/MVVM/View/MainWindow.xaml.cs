@@ -12,12 +12,29 @@ public partial class MainWindow : Window {
 
         Instance = this;
     }
+    public static MainWindow Instance { get; private set; }
 
     public Action<Key> OnAnyKeyDown;
 
-    public static MainWindow Instance { get; private set; }
+    private bool fullscreen = true;
 
     private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
-        OnAnyKeyDown?.Invoke(e.Key);
+        switch (e.Key) {
+            case Key.F11:
+                if (fullscreen) {
+                    WindowStyle = WindowStyle.SingleBorderWindow;
+                    WindowState = WindowState.Normal;
+                    ResizeMode = ResizeMode.CanResize;
+                } else {
+                    WindowStyle = WindowStyle.None;
+                    WindowState = WindowState.Maximized;
+                    ResizeMode = ResizeMode.NoResize;
+                }
+                fullscreen = !fullscreen;
+                break;
+            default:
+                OnAnyKeyDown?.Invoke(e.Key);
+                break;
+        }
     }
 }
