@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Scrabblos.MVVM.View;
 
@@ -8,5 +9,10 @@ namespace Scrabblos.MVVM.View;
 public partial class HomeView : UserControl {
     public HomeView() {
         InitializeComponent();
+    }
+
+    private void CloseApp_OnClick(object sender, RoutedEventArgs e)
+    {
+        Environment.Exit(0);
     }
 }

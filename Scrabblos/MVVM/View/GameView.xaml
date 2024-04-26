@@ -14,15 +14,9 @@
             <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
                 <Canvas Margin="0">
-                    <Button Content="Home"
-                        Command="{Binding NavigateToHomeCommand}"
-                        Height="100" Width="400"
-                        FontSize="36" Canvas.Left="1246" Canvas.Top="165" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-
                     <Image Name="TileS" Source="/Resources/tileS.jpg"
                         Width="200" Height="200"
-                        Canvas.Left="1189" Canvas.Top="829"
+                        Canvas.Left="1339" Canvas.Top="979"
                         MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
                 </Canvas>
             </Border>
@@ -35,11 +29,25 @@
                 <Viewbox>
                     <Border Height="2160" Width="3040"
                     BorderBrush="White" BorderThickness="1">
-                        <StackPanel Margin="0 48">
-                            <TextBlock Text="PAUZA"
+                        <StackPanel>
+                            <TextBlock Text="HRA POZASTAVENA"
                                        TextAlignment="Center"
-                                       FontSize="36" FontWeight="SemiBold"
-                                       Foreground="White"/>
+                                       FontSize="96" FontWeight="SemiBold"
+                                       Foreground="White"
+                                       Margin="0 96 0 0"/>
+
+                            <Button Content="Pokračovat" Name="EscapeBackToGame"
+                                    Click="EscapeBackToGame_OnClick"
+                                    Height="100" Width="400"
+                                    FontSize="48" HorizontalAlignment="Center"
+                                    Margin=" 0  192 0 0 "/>
+
+                            <Button Content="Zpět do menu"
+                                    Command="{Binding NavigateToHomeCommand}"
+                                    Height="100" Width="400"
+                                    FontSize="48" HorizontalAlignment="Center"
+                                    Margin=" 0  36 0 0 "/>
+
                         </StackPanel>
                     </Border>
                 </Viewbox>

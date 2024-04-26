@@ -12,25 +12,26 @@
             <Border Height="2160" Width="2880"
                     BorderBrush="Black" BorderThickness="1">
                 <StackPanel HorizontalAlignment="Center"
-                    Margin="0 36">
+                            Margin="0 36">
                     <TextBlock Text="Scrabblos"
-                       FontSize="116"
-                       TextAlignment="Center"/>
+                               FontSize="116"
+                               TextAlignment="Center"/>
                     <TextBlock Text="Mirek GOTY v2.0"
-                       FontSize="72"
-                       TextAlignment="Center"/>
+                               FontSize="72"
+                               TextAlignment="Center"/>
 
                     <Button Content="Hra"
-                    Command="{Binding NavigateToGameCommand}"
-                    Height="64" Width="160"
-                    FontSize="36"
-                    Margin=" 0 24 0 0 "/>
+                            Command="{Binding NavigateToGameCommand}"
+                            Height="100" Width="400"
+                            FontSize="48"
+                            Margin=" 0  64 0 0 "/>
 
-                    <Button Content="Nastavení"
-                    Command="{Binding NavigateToGameCommand}"
-                    Height="64" Width="240"
-                    FontSize="36"
-                    Margin=" 0 24 0 0 "/>
+                    <Button Content="Vypnout" Name="CloseApp"
+                            Click="CloseApp_OnClick"
+                            Command="{Binding NavigateToGameCommand}"
+                            Height="100" Width="400"
+                            FontSize="48"
+                            Margin=" 0 36 0 0 "/>
                 </StackPanel>
             </Border>
         </Viewbox>

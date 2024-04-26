@@ -2,7 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace Scrabblos.MVVM.View;
 
@@ -16,12 +15,13 @@ public partial class GameView : UserControl {
 
     private bool escapeMenu = false;
 
+    #region Tile dragging
+
     protected bool isDragging;
     private Point clickPosition;
     private TranslateTransform originTT;
 
-    private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
+    private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
         var draggableControl = sender as Image;
         originTT = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
         isDragging = true;
@@ -32,6 +32,15 @@ public partial class GameView : UserControl {
     private void Tile_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
         isDragging = false;
         var draggable = sender as Image;
+        var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
+        // Snap to grid if placed correctly
+        if (false) {
+
+        } else {
+            // Else get back to origin
+            transform.X = originTT.X;
+            transform.Y = originTT.Y;
+        }
         draggable.ReleaseMouseCapture();
     }
 
@@ -46,6 +55,16 @@ public partial class GameView : UserControl {
         }
     }
 
+    #endregion
+
+    private double GetActualHeightMultiplier() {
+        return 2160 / GameViewBox.ActualHeight;
+    }
+
+    private double GetActualWidthMultiplier() {
+        return 2880 / GameViewBox.ActualWidth;
+    }
+
     private void GameView_OnLoaded(object sender, RoutedEventArgs e) {
         MainWindow.Instance.OnAnyKeyDown += OnAnyKeyDown;
     }
@@ -57,24 +76,24 @@ public partial class GameView : UserControl {
     private void OnAnyKeyDown(Key key) {
         switch (key) {
             case Key.Escape:
-                if (!escapeMenu) {
-                    EscapeMenu.IsEnabled = true;
-                    EscapeMenu.Visibility = Visibility.Visible;
-                } else {
-                    EscapeMenu.IsEnabled = false;
-                    EscapeMenu.Visibility = Visibility.Hidden;
-                }
-                escapeMenu = !escapeMenu;
+                ToggleEscapeMenu();
                 break;
         }
     }
 
-    private double GetActualHeightMultiplier()
-    {
-        return 2160 / GameViewBox.ActualHeight;
+    private void EscapeBackToGame_OnClick(object sender, RoutedEventArgs e) {
+        ToggleEscapeMenu();
     }
 
-    private double GetActualWidthMultiplier() {
-        return 2880 / GameViewBox.ActualWidth;
+    private void ToggleEscapeMenu() {
+        if (!escapeMenu) {
+            EscapeMenu.IsEnabled = true;
+            EscapeMenu.Visibility = Visibility.Visible;
+        } else {
+            EscapeMenu.IsEnabled = false;
+            EscapeMenu.Visibility = Visibility.Hidden;
+        }
+
+        escapeMenu = !escapeMenu;
     }
 }
