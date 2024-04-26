@@ -5,31 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1920"
+             d:DesignHeight="2160" d:DesignWidth="3840"
              Background="AliceBlue">
     <Grid>
         <Viewbox>
-            <Border Height="720" Width="960"
+            <Border Height="2160" Width="2880"
                     BorderBrush="Black" BorderThickness="1">
                 <StackPanel HorizontalAlignment="Center"
                     Margin="0 36">
                     <TextBlock Text="Scrabblos"
-                       FontSize="48"
+                       FontSize="116"
                        TextAlignment="Center"/>
                     <TextBlock Text="Mirek GOTY v2.0"
-                       FontSize="24"
+                       FontSize="72"
                        TextAlignment="Center"/>
 
                     <Button Content="Hra"
                     Command="{Binding NavigateToGameCommand}"
-                    Height="28" Width="100"
-                    FontSize="16"
+                    Height="64" Width="160"
+                    FontSize="36"
                     Margin=" 0 24 0 0 "/>
 
                     <Button Content="Nastavení"
                     Command="{Binding NavigateToGameCommand}"
-                    Height="28" Width="100"
-                    FontSize="16"
+                    Height="64" Width="240"
+                    FontSize="36"
                     Margin=" 0 24 0 0 "/>
                 </StackPanel>
             </Border>

@@ -5,33 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1920"
+             d:DesignHeight="2160" d:DesignWidth="3840"
              Background="DarkSeaGreen"
              Loaded="GameView_OnLoaded"
              Unloaded="GameView_OnUnloaded">
     <Grid Name="GameGrid">
-        <Viewbox>
-            <Border Height="720" Width="960"
+        <Viewbox Name="GameViewBox">
+            <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
-                <Grid Margin="0 36">
-                    <TextBlock Text="GAME GRID"
-                        TextAlignment="Center"
-                        FontWeight="SemiBold" FontSize="36"
-                        Foreground="White"></TextBlock>
-
-                    <TextBlock Name="TbPressed"
-                        FontSize="24"/>
-
+                <Canvas Margin="0">
                     <Button Content="Home"
                         Command="{Binding NavigateToHomeCommand}"
-                        Height="28" Width="100"
-                        FontSize="16"
-                        Margin="429,76,429,542"/>
+                        Height="100" Width="400"
+                        FontSize="36" Canvas.Left="1246" Canvas.Top="165" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                    <Image Source="/Resources/tileS.jpg"
-                        Width="50" Height="50"
-                        IsManipulationEnabled="True"/>
-                </Grid>
+
+                    <Image Name="TileS" Source="/Resources/tileS.jpg"
+                        Width="200" Height="200"
+                        Canvas.Left="1189" Canvas.Top="829"
+                        MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
+                </Canvas>
             </Border>
         </Viewbox>
         <Grid Name="EscapeMenu"
@@ -40,7 +33,7 @@
             </Grid>
             <Grid>
                 <Viewbox>
-                    <Border Height="720" Width="960"
+                    <Border Height="2160" Width="3040"
                     BorderBrush="White" BorderThickness="1">
                         <StackPanel Margin="0 48">
                             <TextBlock Text="PAUZA"
