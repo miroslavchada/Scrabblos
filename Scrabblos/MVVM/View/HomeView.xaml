@@ -10,7 +10,7 @@
     <Grid>
         <Viewbox>
             <Border Height="720" Width="960"
-                    BorderBrush="Black" BorderThickness="2">
+                    BorderBrush="Black" BorderThickness="1">
                 <StackPanel HorizontalAlignment="Center"
                     Margin="0 36">
                     <TextBlock Text="Scrabblos"
@@ -20,7 +20,13 @@
                        FontSize="24"
                        TextAlignment="Center"/>
 
-                    <Button Content="Start"
+                    <Button Content="Hra"
+                    Command="{Binding NavigateToGameCommand}"
+                    Height="28" Width="100"
+                    FontSize="16"
+                    Margin=" 0 24 0 0 "/>
+
+                    <Button Content="Nastavení"
                     Command="{Binding NavigateToGameCommand}"
                     Height="28" Width="100"
                     FontSize="16"

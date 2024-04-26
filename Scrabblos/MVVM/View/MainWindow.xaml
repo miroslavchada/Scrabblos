@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized" ResizeMode="NoResize"
         WindowStyle="None"
-        KeyDown="MainWindow_OnKeyDown" Icon="/MVVM/View/mirek.ico">
+        KeyDown="MainWindow_OnKeyDown">
     <Grid>
         <ContentControl Content="{Binding Navigation.CurrentView}"></ContentControl>
     </Grid>

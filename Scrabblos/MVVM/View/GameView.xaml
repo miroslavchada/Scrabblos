@@ -12,11 +12,11 @@
     <Grid Name="GameGrid">
         <Viewbox>
             <Border Height="720" Width="960"
-                    BorderBrush="White" BorderThickness="2">
-                <StackPanel Margin="0 36">
+                    BorderBrush="White" BorderThickness="1">
+                <Grid Margin="0 36">
                     <TextBlock Text="GAME GRID"
                         TextAlignment="Center"
-                        FontWeight="SemiBold" FontSize="24"
+                        FontWeight="SemiBold" FontSize="36"
                         Foreground="White"></TextBlock>
 
                     <TextBlock Name="TbPressed"
@@ -26,9 +26,31 @@
                         Command="{Binding NavigateToHomeCommand}"
                         Height="28" Width="100"
                         FontSize="16"
-                        Margin=" 0 24 0 0 "/>
-                </StackPanel>
+                        Margin="429,76,429,542"/>
+
+                    <Image Source="/Resources/tileS.jpg"
+                        Width="50" Height="50"
+                        IsManipulationEnabled="True"/>
+                </Grid>
             </Border>
         </Viewbox>
+        <Grid Name="EscapeMenu"
+              IsEnabled="false" Visibility="Hidden">
+            <Grid Background="Black" Opacity=".7">
+            </Grid>
+            <Grid>
+                <Viewbox>
+                    <Border Height="720" Width="960"
+                    BorderBrush="White" BorderThickness="1">
+                        <StackPanel Margin="0 48">
+                            <TextBlock Text="PAUZA"
+                                       TextAlignment="Center"
+                                       FontSize="36" FontWeight="SemiBold"
+                                       Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                </Viewbox>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
