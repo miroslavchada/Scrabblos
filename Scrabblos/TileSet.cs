@@ -1,28 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace Scrabblos;
+﻿namespace Scrabblos;
 
 class TileSet {
-    public TileSet (List<Tile> tiles, string name = "") {
-        
-    }
 
-    public TileSet(string path)
-    {
-        Tile? deserialized = JsonSerializer.Deserialize<Tile>(path);
-    }
+    public string name { get; } // Name of the tile set
+    public Dictionary<Tile, int> set { get; } // Dictionary of tiles and their counts
 
-    public List<Tile> GetAllTiles()
-    {
-        List<Tile> tileList = new();
-
-        return tileList;
+    public TileSet(Dictionary<Tile, int> tiles, string name = "") {
+        this.name = name;
+        this.set = tiles;
     }
 }

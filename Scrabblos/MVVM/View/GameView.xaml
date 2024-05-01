@@ -19,7 +19,11 @@
                         Width="200" Height="200"
                         Canvas.Left="1339" Canvas.Top="979"
                         MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
-                    
+
+                    <Button Content="Pauza" Name="BtnPauseGame"
+                            Click="ToggleEscapeMenuButton"
+                            Height="80" Width="300"
+                            FontSize="36" HorizontalAlignment="Right" Canvas.Right="8" Canvas.Top="40" VerticalAlignment="Top"/>
                 </Canvas>
             </Border>
         </Viewbox>
@@ -29,7 +33,7 @@
             </Grid>
             <Grid>
                 <Viewbox>
-                    <Border Height="2160" Width="3040"
+                    <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="HRA POZASTAVENA"
@@ -38,8 +42,8 @@
                                        Foreground="White"
                                        Margin="0 96 0 0"/>
 
-                            <Button Content="Pokračovat" Name="EscapeBackToGame"
-                                    Click="EscapeBackToGame_OnClick"
+                            <Button Content="Pokračovat" Name="BtnEscapeBackToGame"
+                                    Click="ToggleEscapeMenuButton"
                                     Height="100" Width="400"
                                     FontSize="48" HorizontalAlignment="Center"
                                     Margin=" 0  192 0 0 "/>

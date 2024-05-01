@@ -13,6 +13,51 @@ public partial class GameView : UserControl {
         InitializeComponent();
     }
 
+    private List<TileSet> sets = new() {
+        new TileSet(new Dictionary<Tile, int> {
+            { new Tile('A', 1), 5 },
+            { new Tile('Á', 2), 2 },
+            { new Tile('B', 3), 2 },
+            { new Tile('C', 2), 3 },
+            { new Tile('Č', 4), 1 },
+            { new Tile('D', 1), 3 },
+            { new Tile('Ď', 8), 1 },
+            { new Tile('E', 1), 5 },
+            { new Tile('É', 3), 2 },
+            { new Tile('Ě', 3), 2 },
+            { new Tile('F', 5), 1 },
+            { new Tile('G', 5), 1 },
+            { new Tile('H', 2), 3 },
+            { new Tile('I', 1), 4 },
+            { new Tile('Í', 2), 3 },
+            { new Tile('J', 2), 2 },
+            { new Tile('K', 1), 3 },
+            { new Tile('L', 1), 3 },
+            { new Tile('M', 2), 3 },
+            { new Tile('N', 1), 5 },
+            { new Tile('Ň', 6), 1 },
+            { new Tile('O', 1), 6 },
+            { new Tile('Ó', 7), 1 },
+            { new Tile('P', 1), 3 },
+            { new Tile('R', 1), 3 },
+            { new Tile('Ř', 4), 2 },
+            { new Tile('S', 1), 4 },
+            { new Tile('Š', 4), 2 },
+            { new Tile('T', 1), 4 },
+            { new Tile('Ť', 7), 1 },
+            { new Tile('U', 2), 3 },
+            { new Tile('Ú', 5), 1 },
+            { new Tile('Ů', 4), 1 },
+            { new Tile('V', 1), 4 },
+            { new Tile('X', 10), 1 },
+            { new Tile('Y', 2), 2 },
+            { new Tile('Ý', 4), 2 },
+            { new Tile('Z', 2), 2 },
+            { new Tile('Ž', 4), 1 },
+            { new Tile(' ', 0), 2 }
+        }, "Čeština oficiální")
+    };
+
     private bool escapeMenu = false;
 
     #region Tile dragging
@@ -81,7 +126,7 @@ public partial class GameView : UserControl {
         }
     }
 
-    private void EscapeBackToGame_OnClick(object sender, RoutedEventArgs e) {
+    private void ToggleEscapeMenuButton(object sender, RoutedEventArgs e) {
         ToggleEscapeMenu();
     }
 
