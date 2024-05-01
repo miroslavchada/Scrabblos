@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
+             xmlns:MyNamespace="clr-namespace:Scrabblos"
              mc:Ignorable="d" 
              d:DesignHeight="2160" d:DesignWidth="3840"
              Background="AliceBlue">

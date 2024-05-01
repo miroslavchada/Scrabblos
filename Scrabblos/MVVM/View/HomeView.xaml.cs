@@ -11,8 +11,7 @@ public partial class HomeView : UserControl {
         InitializeComponent();
     }
 
-    private void CloseApp_OnClick(object sender, RoutedEventArgs e)
-    {
+    private void CloseApp_OnClick(object sender, RoutedEventArgs e) {
         Environment.Exit(0);
     }
 }

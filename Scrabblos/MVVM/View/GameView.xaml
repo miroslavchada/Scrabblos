@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Scrabblos.MVVM.View"
+             xmlns:MyNamespace="clr-namespace:Scrabblos"
              mc:Ignorable="d" 
              d:DesignHeight="2160" d:DesignWidth="3840"
              Background="DarkSeaGreen"
@@ -18,6 +19,7 @@
                         Width="200" Height="200"
                         Canvas.Left="1339" Canvas.Top="979"
                         MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
+                    
                 </Canvas>
             </Border>
         </Viewbox>
@@ -47,7 +49,6 @@
                                     Height="100" Width="400"
                                     FontSize="48" HorizontalAlignment="Center"
                                     Margin=" 0  36 0 0 "/>
-
                         </StackPanel>
                     </Border>
                 </Viewbox>
