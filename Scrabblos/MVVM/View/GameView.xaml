@@ -15,10 +15,66 @@
             <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
                 <Canvas Margin="0">
+                    <Grid Height="156" Width="2108"
+                          Background="White" Canvas.Left="386" Canvas.Top="20">
+                        <TextBlock Name="TBlockInfo"
+                                   FontSize="42" Text="Informace jak pán" VerticalAlignment="Center" TextAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Height="1632" Width="1632"
+                          Background="Black" Canvas.Left="624" Canvas.Top="208" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                    <Grid Name="PlayGrid"
+                          Height="1440" Width="1440"
+                          Background="Wheat" Canvas.Left="720" Canvas.Top="304"
+                          ShowGridLines="True"
+                          MouseEnter="PlayGrid_OnMouseEnter" MouseLeave="PlayGrid_OnMouseLeave"
+                          MouseMove="PlayGrid_OnMouseMove">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        
+
+                    </Grid>
+
+                    <Grid Height="163" Width="1860"
+                          Background="Wheat" Canvas.Left="509" Canvas.Top="1955" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
                     <Image Name="TileS" Source="/Resources/tileS.jpg"
-                        Width="200" Height="200"
-                        Canvas.Left="1339" Canvas.Top="979"
-                        MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
+                           Width="96" Height="96"
+                           Canvas.Left="1392" Canvas.Top="1988"
+                           MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                     <Button Content="Pauza" Name="BtnPauseGame"
                             Click="ToggleEscapeMenuButton"

@@ -66,6 +66,8 @@ public partial class GameView : UserControl {
     private Point clickPosition;
     private TranslateTransform originTT;
 
+    private bool hoveringPlayGrid;
+
     private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
         var draggableControl = sender as Image;
         originTT = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
@@ -98,6 +100,19 @@ public partial class GameView : UserControl {
             transform.Y = originTT.Y + (currentPosition.Y - clickPosition.Y) * GetActualHeightMultiplier();
             draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
         }
+    }
+    private void PlayGrid_OnMouseEnter(object sender, MouseEventArgs e) {
+        hoveringPlayGrid = true;
+    }
+
+    private void PlayGrid_OnMouseLeave(object sender, MouseEventArgs e) {
+        hoveringPlayGrid = false;
+        TBlockInfo.Text = "Informace jak pán";
+    }
+
+    private void PlayGrid_OnMouseMove(object sender, MouseEventArgs e)
+    {
+        TBlockInfo.Text = $"";
     }
 
     #endregion
