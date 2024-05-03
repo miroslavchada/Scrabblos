@@ -28,8 +28,8 @@
 
                     <Grid Name="PlayGrid"
                           Height="1440" Width="1440"
-                          Background="Wheat" Canvas.Left="720" Canvas.Top="304"
-                          ShowGridLines="True">
+                          Canvas.Left="720" Canvas.Top="304"
+                          Background="Wheat" ShowGridLines="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -66,13 +66,24 @@
                         </Grid.RowDefinitions>
                     </Grid>
 
-                    <Grid Height="163" Width="1860"
-                          Background="Wheat" Canvas.Left="509" Canvas.Top="1955" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-
-                    <Image Name="TileS" Source="/Resources/tileS.jpg"
-                           Width="96" Height="96"
-                           Canvas.Left="1392" Canvas.Top="1988"
-                           MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <Grid Name="DockGrid"
+                          Height="140" Width="840"
+                          Canvas.Left="1019" Canvas.Top="1955"
+                          Background="Wheat" ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Name="TileS" Source="/Resources/tileS.jpg"
+                               Width="96" Height="96"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
+                    </Grid>
 
                     <Button Content="Pauza" Name="BtnPauseGame"
                             Click="ToggleEscapeMenuButton"

@@ -66,8 +66,8 @@ public partial class GameView : UserControl {
     private Point clickPosition;
     private TranslateTransform originTT;
 
-    private int? hoverGameCellColumn = null;
-    private int? hoverGameCellRow = null;
+    private int? hoverPlayCellColumn, hoverDockCellColumn;
+    private int? hoverPlayCellRow, hoverDockCellRow;
 
     private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
         var draggableControl = sender as Image;
@@ -75,25 +75,65 @@ public partial class GameView : UserControl {
         isDragging = true;
         clickPosition = e.GetPosition(this);
         draggableControl.CaptureMouse();
+
+        // From which grid the tile is dragged is in the foreground
+        Grid draggableParent = draggableControl.Parent as Grid;
+        switch (draggableParent.Name) {
+            case "PlayGrid":
+                Canvas.SetZIndex(PlayGrid, 1);
+                Canvas.SetZIndex(DockGrid, 0);
+                break;
+
+            case "DockGrid":
+                Canvas.SetZIndex(PlayGrid, 0);
+                Canvas.SetZIndex(DockGrid, 1);
+                break;
+        }
     }
 
     private void Tile_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
         isDragging = false;
         var draggable = sender as Image;
         var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
-        // Snap to grid if placed correctly
-        if (hoverGameCellColumn != null && hoverGameCellRow != null)
-        {
-            // Location of the cell by adding margin and index times dimensions of the cells
-            transform.X = (double)(0 + hoverGameCellRow * 96);
-            transform.Y = (double)(0 + hoverGameCellColumn * 96);
 
-            TBlockInfo.Text += $"\r\ny={transform.Y}:x={transform.X}";
-        } else {
-            // Else get back to origin
-            transform.X = originTT.X;
-            transform.Y = originTT.Y;
+        // Snap to grid if placed correctly
+        // PlayGrid
+        if (hoverPlayCellColumn != null && hoverPlayCellRow != null)
+        {
+            // int? to int (can't be null anymore)
+            int gameCellColumn = (int)hoverPlayCellColumn;
+            int gameCellRow = (int)hoverPlayCellRow;
+
+            // Change tiles parent if it is not same as the new one
+            Grid draggableParent = draggable.Parent as Grid;
+            if (draggableParent != PlayGrid) {
+                draggableParent.Children.Remove(draggable);
+                PlayGrid.Children.Add(draggable);
+            }
+
+            // Set the tile correct cell
+            Grid.SetColumn(draggable, gameCellColumn);
+            Grid.SetRow(draggable, gameCellRow);
+        } // DockGrid
+        else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
+            // int? to int (can't be null anymore)
+            int dockCellColumn = (int)hoverDockCellColumn;
+            int dockCellRow = (int)hoverDockCellRow;
+
+            // Change tiles parent if it is not same as the new one
+            Grid draggableParent = draggable.Parent as Grid;
+            if (draggableParent != DockGrid) {
+                draggableParent.Children.Remove(draggable);
+                DockGrid.Children.Add(draggable);
+            }
+
+            // Set the tile correct cell
+            Grid.SetColumn(draggable, dockCellColumn);
+            Grid.SetRow(draggable, dockCellRow);
         }
+        transform.X = 0;
+        transform.Y = 0;
+
         draggable.ReleaseMouseCapture();
     }
 
@@ -153,15 +193,30 @@ public partial class GameView : UserControl {
 
     private void GameView_OnMouseMove(object sender, MouseEventArgs e) {
 
-        hoverGameCellColumn = (int)Math.Floor(e.GetPosition(PlayGrid).X / 96);
-        hoverGameCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
+        // Gets cell by dividing pixels by PlayGrid column/row size
+        hoverPlayCellColumn = (int)Math.Floor(e.GetPosition(PlayGrid).X / 96);
+        hoverPlayCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
 
-        hoverGameCellColumn = hoverGameCellColumn >= 0 && hoverGameCellColumn <= 14 ? hoverGameCellColumn : null;
-        hoverGameCellRow = hoverGameCellRow >= 0 && hoverGameCellRow <= 14 ? hoverGameCellRow : null;
+        // Sets to null if out of bounds
+        hoverPlayCellColumn = hoverPlayCellColumn >= 0 && hoverPlayCellColumn <= 14 ? hoverPlayCellColumn : null;
+        hoverPlayCellRow = hoverPlayCellRow >= 0 && hoverPlayCellRow <= 14 ? hoverPlayCellRow : null;
 
-        if (hoverGameCellColumn != null && hoverGameCellRow != null) {
-            TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverGameCellColumn, (int)hoverGameCellRow)}";
+        // Gets cell by dividing pixels by DockGrid column/row size
+        hoverDockCellColumn = (int)Math.Floor(e.GetPosition(DockGrid).X / 120);
+        hoverDockCellRow = (int)Math.Floor(e.GetPosition(DockGrid).Y / 140);
+
+        // Sets to null if out of bounds
+        hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= 6 ? hoverDockCellColumn : null;
+        hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= 0 ? hoverDockCellRow : null;
+
+        // If in bounds of PlayGrid
+        if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
+            TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
             TBlockInfo.Text += $"\r\n{e.GetPosition(PlayGrid).X};{e.GetPosition(PlayGrid).Y}";
+        } // If in bounds of DockGrid
+        else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
+            TBlockInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
+            TBlockInfo.Text += $"\r\n{e.GetPosition(DockGrid).X};{e.GetPosition(DockGrid).Y}";
         } else {
             TBlockInfo.Text = "Informace jak pán";
         }
