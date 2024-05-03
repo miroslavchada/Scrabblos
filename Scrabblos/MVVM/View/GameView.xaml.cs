@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Scrabblos.MVVM.View;
 
@@ -11,7 +12,16 @@ namespace Scrabblos.MVVM.View;
 public partial class GameView : UserControl {
     public GameView() {
         InitializeComponent();
+
+        Instance = this;
+
+        DockGrid.Children.Add(new TileBlock(new Tile('S', 1), "tileS.jpg"));
     }
+
+    public static GameView Instance { get; private set; }
+
+    private bool escapeMenu = false;
+    private int currentSet = 0;
 
     private List<TileSet> sets = new() {
         new TileSet(new Dictionary<Tile, int> {
@@ -58,8 +68,6 @@ public partial class GameView : UserControl {
         }, "Čeština oficiální")
     };
 
-    private bool escapeMenu = false;
-
     #region Tile dragging
 
     protected bool isDragging;
@@ -69,7 +77,7 @@ public partial class GameView : UserControl {
     private int? hoverPlayCellColumn, hoverDockCellColumn;
     private int? hoverPlayCellRow, hoverDockCellRow;
 
-    private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+    public void TileBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
         var draggableControl = sender as Image;
         originTT = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
         isDragging = true;
@@ -91,7 +99,7 @@ public partial class GameView : UserControl {
         }
     }
 
-    private void Tile_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+    public void TileBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
         isDragging = false;
         var draggable = sender as Image;
         var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
@@ -137,7 +145,7 @@ public partial class GameView : UserControl {
         draggable.ReleaseMouseCapture();
     }
 
-    private void Tile_MouseMove(object sender, MouseEventArgs e) {
+    public void TileBlock_MouseMove(object sender, MouseEventArgs e) {
         var draggableControl = sender as Image;
         if (isDragging && draggableControl != null) {
             Point currentPosition = e.GetPosition(this);
@@ -190,7 +198,6 @@ public partial class GameView : UserControl {
         escapeMenu = !escapeMenu;
     }
 
-
     private void GameView_OnMouseMove(object sender, MouseEventArgs e) {
 
         // Gets cell by dividing pixels by PlayGrid column/row size
@@ -212,11 +219,9 @@ public partial class GameView : UserControl {
         // If in bounds of PlayGrid
         if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
             TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
-            TBlockInfo.Text += $"\r\n{e.GetPosition(PlayGrid).X};{e.GetPosition(PlayGrid).Y}";
         } // If in bounds of DockGrid
         else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
             TBlockInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
-            TBlockInfo.Text += $"\r\n{e.GetPosition(DockGrid).X};{e.GetPosition(DockGrid).Y}";
         } else {
             TBlockInfo.Text = "Informace jak pán";
         }

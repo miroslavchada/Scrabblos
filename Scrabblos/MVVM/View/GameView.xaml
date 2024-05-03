@@ -79,10 +79,6 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Image Name="TileS" Source="/Resources/tileS.jpg"
-                               Width="96" Height="96"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               MouseLeftButtonUp="Tile_MouseLeftButtonUp" MouseLeftButtonDown="Tile_MouseLeftButtonDown" MouseMove="Tile_MouseMove"/>
                     </Grid>
 
                     <Button Content="Pauza" Name="BtnPauseGame"
@@ -99,7 +95,7 @@
             <Grid>
                 <Viewbox>
                     <Border Height="2160" Width="2880"
-                    BorderBrush="White" BorderThickness="1">
+                            BorderBrush="White" BorderThickness="1">
                         <StackPanel>
                             <TextBlock Text="HRA POZASTAVENA"
                                        TextAlignment="Center"

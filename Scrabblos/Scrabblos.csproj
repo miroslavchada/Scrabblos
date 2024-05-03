@@ -9,12 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TileBundles\**" />
+    <EmbeddedResource Remove="TileBundles\**" />
+    <None Remove="TileBundles\**" />
+    <Page Remove="TileBundles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MVVM\View\mirek.ico" />
+    <None Remove="Resources\mirek.ico" />
     <None Remove="Resources\tileS.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="MVVM\Model\" />
-    <Folder Include="TileBundles\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="MVVM\View\mirek.ico" />
+    <Resource Include="Resources\mirek.ico" />
     <Resource Include="Resources\tileS.jpg" />
   </ItemGroup>
 
