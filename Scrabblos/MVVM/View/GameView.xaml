@@ -9,12 +9,14 @@
              d:DesignHeight="2160" d:DesignWidth="3840"
              Background="DarkSeaGreen"
              Loaded="GameView_OnLoaded"
-             Unloaded="GameView_OnUnloaded">
+             Unloaded="GameView_OnUnloaded"
+             MouseMove="GameView_OnMouseMove">
     <Grid Name="GameGrid">
         <Viewbox Name="GameViewBox">
             <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
-                <Canvas Margin="0">
+                <Canvas Margin="0" Name="GameCanvas">
+
                     <Grid Height="156" Width="2108"
                           Background="White" Canvas.Left="386" Canvas.Top="20">
                         <TextBlock Name="TBlockInfo"
@@ -27,9 +29,7 @@
                     <Grid Name="PlayGrid"
                           Height="1440" Width="1440"
                           Background="Wheat" Canvas.Left="720" Canvas.Top="304"
-                          ShowGridLines="True"
-                          MouseEnter="PlayGrid_OnMouseEnter" MouseLeave="PlayGrid_OnMouseLeave"
-                          MouseMove="PlayGrid_OnMouseMove">
+                          ShowGridLines="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -64,8 +64,6 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        
-
                     </Grid>
 
                     <Grid Height="163" Width="1860"

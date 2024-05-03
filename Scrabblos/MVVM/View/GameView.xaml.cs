@@ -66,7 +66,8 @@ public partial class GameView : UserControl {
     private Point clickPosition;
     private TranslateTransform originTT;
 
-    private bool hoveringPlayGrid;
+    private int? hoverGameCellColumn = null;
+    private int? hoverGameCellRow = null;
 
     private void Tile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
         var draggableControl = sender as Image;
@@ -81,8 +82,13 @@ public partial class GameView : UserControl {
         var draggable = sender as Image;
         var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
         // Snap to grid if placed correctly
-        if (false) {
+        if (hoverGameCellColumn != null && hoverGameCellRow != null)
+        {
+            // Location of the cell by adding margin and index times dimensions of the cells
+            transform.X = (double)(0 + hoverGameCellRow * 96);
+            transform.Y = (double)(0 + hoverGameCellColumn * 96);
 
+            TBlockInfo.Text += $"\r\ny={transform.Y}:x={transform.X}";
         } else {
             // Else get back to origin
             transform.X = originTT.X;
@@ -100,19 +106,6 @@ public partial class GameView : UserControl {
             transform.Y = originTT.Y + (currentPosition.Y - clickPosition.Y) * GetActualHeightMultiplier();
             draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
         }
-    }
-    private void PlayGrid_OnMouseEnter(object sender, MouseEventArgs e) {
-        hoveringPlayGrid = true;
-    }
-
-    private void PlayGrid_OnMouseLeave(object sender, MouseEventArgs e) {
-        hoveringPlayGrid = false;
-        TBlockInfo.Text = "Informace jak pán";
-    }
-
-    private void PlayGrid_OnMouseMove(object sender, MouseEventArgs e)
-    {
-        TBlockInfo.Text = $"";
     }
 
     #endregion
@@ -155,5 +148,29 @@ public partial class GameView : UserControl {
         }
 
         escapeMenu = !escapeMenu;
+    }
+
+
+    private void GameView_OnMouseMove(object sender, MouseEventArgs e) {
+
+        hoverGameCellColumn = (int)Math.Floor(e.GetPosition(PlayGrid).X / 96);
+        hoverGameCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
+
+        hoverGameCellColumn = hoverGameCellColumn >= 0 && hoverGameCellColumn <= 14 ? hoverGameCellColumn : null;
+        hoverGameCellRow = hoverGameCellRow >= 0 && hoverGameCellRow <= 14 ? hoverGameCellRow : null;
+
+        if (hoverGameCellColumn != null && hoverGameCellRow != null) {
+            TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverGameCellColumn, (int)hoverGameCellRow)}";
+            TBlockInfo.Text += $"\r\n{e.GetPosition(PlayGrid).X};{e.GetPosition(PlayGrid).Y}";
+        } else {
+            TBlockInfo.Text = "Informace jak pán";
+        }
+    }
+
+    private string CoordsToCell(int columnIndex, int rowIndex)
+    {
+        char[] letters = new[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' };
+        
+        return $"{columnIndex + 1}{letters[rowIndex]}";
     }
 }

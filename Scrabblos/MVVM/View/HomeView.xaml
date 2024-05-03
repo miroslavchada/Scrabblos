@@ -7,7 +7,7 @@
              xmlns:MyNamespace="clr-namespace:Scrabblos"
              mc:Ignorable="d" 
              d:DesignHeight="2160" d:DesignWidth="3840"
-             Background="AliceBlue">
+             Background="White">
     <Grid>
         <Viewbox>
             <Border Height="2160" Width="2880"
