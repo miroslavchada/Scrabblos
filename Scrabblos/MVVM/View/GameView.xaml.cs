@@ -20,8 +20,8 @@ public partial class GameView : UserControl {
 
     public static GameView Instance { get; private set; }
 
-    private bool escapeMenu = false;
-    private int currentSet = 0;
+    private bool escapeMenu;
+    private int currentSetIndex = 0;
 
     private List<TileSet> sets = new() {
         new TileSet(new Dictionary<Tile, int> {
@@ -67,6 +67,8 @@ public partial class GameView : UserControl {
             { new Tile(' ', 0), 2 }
         }, "Čeština oficiální")
     };
+
+    
 
     #region Tile dragging
 
@@ -158,6 +160,26 @@ public partial class GameView : UserControl {
 
     #endregion
 
+    private Tile[] DockGridLoad() {
+        Tile[] tiles = new Tile[7];
+
+        foreach (TileBlock tileBlock in DockGrid.Children) {
+            tiles[DockGrid.Children.IndexOf(tileBlock)] = tileBlock.tile;
+        }
+
+        return tiles;
+    }
+
+    private void DockGridFill() {
+        Tile[] dockGridTiles = DockGridLoad();
+        for (int i = 0; i < DockGrid.ColumnDefinitions.Count; i++) {
+            if (dockGridTiles[i] == null)
+                return;
+
+            DockGrid.Children.Add(new TileBlock(, $"tile{dockGridTiles[i].character}.jpg"));
+        }
+    }
+
     private double GetActualHeightMultiplier() {
         return 2160 / GameViewBox.ActualHeight;
     }
@@ -205,16 +227,20 @@ public partial class GameView : UserControl {
         hoverPlayCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
 
         // Sets to null if out of bounds
-        hoverPlayCellColumn = hoverPlayCellColumn >= 0 && hoverPlayCellColumn <= 14 ? hoverPlayCellColumn : null;
-        hoverPlayCellRow = hoverPlayCellRow >= 0 && hoverPlayCellRow <= 14 ? hoverPlayCellRow : null;
+        int lastPlayColumn = PlayGrid.ColumnDefinitions.Count - 1;
+        int lastPlayRow = PlayGrid.RowDefinitions.Count - 1;
+        hoverPlayCellColumn = hoverPlayCellColumn >= 0 && hoverPlayCellColumn <= lastPlayColumn ? hoverPlayCellColumn : null;
+        hoverPlayCellRow = hoverPlayCellRow >= 0 && hoverPlayCellRow <= lastPlayRow ? hoverPlayCellRow : null;
 
         // Gets cell by dividing pixels by DockGrid column/row size
         hoverDockCellColumn = (int)Math.Floor(e.GetPosition(DockGrid).X / 120);
         hoverDockCellRow = (int)Math.Floor(e.GetPosition(DockGrid).Y / 140);
 
         // Sets to null if out of bounds
-        hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= 6 ? hoverDockCellColumn : null;
-        hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= 0 ? hoverDockCellRow : null;
+        int lastDockColumn = DockGrid.ColumnDefinitions.Count - 1;
+        int lastDockRow = DockGrid.RowDefinitions.Count - 1;
+        hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= lastDockColumn ? hoverDockCellColumn : null;
+        hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= lastDockRow ? hoverDockCellRow : null;
 
         // If in bounds of PlayGrid
         if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
