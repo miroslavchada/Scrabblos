@@ -15,7 +15,10 @@ public partial class GameView : UserControl {
 
         Instance = this;
 
-        DockGrid.Children.Add(new TileBlock(new Tile('S', 1), "tileS.jpg"));
+        TileBlock test = new TileBlock(new Tile('S', 1), "mirek.ico");
+        Grid.SetColumn(test, 2);
+        DockGrid.Children.Add(test);
+        DockGridFill();
     }
 
     public static GameView Instance { get; private set; }
@@ -68,7 +71,8 @@ public partial class GameView : UserControl {
         }, "Čeština oficiální")
     };
 
-    
+    private TileBlock?[,] playBoard = new TileBlock?[15, 15];
+    private TileBlock?[] dockBoard = new TileBlock?[7];
 
     #region Tile dragging
 
@@ -90,15 +94,17 @@ public partial class GameView : UserControl {
         Grid draggableParent = draggableControl.Parent as Grid;
         switch (draggableParent.Name) {
             case "PlayGrid":
-                Canvas.SetZIndex(PlayGrid, 1);
-                Canvas.SetZIndex(DockGrid, 0);
+                Panel.SetZIndex(PlayGrid, 1);
+                Panel.SetZIndex(DockGrid, 0);
                 break;
 
             case "DockGrid":
-                Canvas.SetZIndex(PlayGrid, 0);
-                Canvas.SetZIndex(DockGrid, 1);
+                Panel.SetZIndex(PlayGrid, 0);
+                Panel.SetZIndex(DockGrid, 1);
                 break;
         }
+
+        Panel.SetZIndex(draggableControl, 10);
     }
 
     public void TileBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
@@ -145,6 +151,9 @@ public partial class GameView : UserControl {
         transform.Y = 0;
 
         draggable.ReleaseMouseCapture();
+
+
+        Panel.SetZIndex(draggable, 0);
     }
 
     public void TileBlock_MouseMove(object sender, MouseEventArgs e) {
@@ -160,24 +169,34 @@ public partial class GameView : UserControl {
 
     #endregion
 
-    private Tile[] DockGridLoad() {
-        Tile[] tiles = new Tile[7];
+    private void DockGridFill() {
+        for (int i = 0; i < dockBoard.Length; i++) {
+            if (dockBoard[i] != null)
+                continue;
 
-        foreach (TileBlock tileBlock in DockGrid.Children) {
-            tiles[DockGrid.Children.IndexOf(tileBlock)] = tileBlock.tile;
+            //new TileBlock(GetRandomAvailableTile(), $"tile{dockGridTiles[i].character}.jpg");
+            TileBlock tileBlock = new TileBlock(GetRandomAvailableTile(), $"tileS.jpg");
+            Grid.SetColumn(tileBlock, i);
+
+            DockGrid.Children.Add(tileBlock);
         }
-
-        return tiles;
     }
 
-    private void DockGridFill() {
-        Tile[] dockGridTiles = DockGridLoad();
-        for (int i = 0; i < DockGrid.ColumnDefinitions.Count; i++) {
-            if (dockGridTiles[i] == null)
-                return;
+    private Tile GetRandomAvailableTile() {
+        List<int> availableIndexes = new();
 
-            DockGrid.Children.Add(new TileBlock(, $"tile{dockGridTiles[i].character}.jpg"));
+        for (int i = 0; i < sets[currentSetIndex].usedArray.Length; i++) {
+            if (!sets[currentSetIndex].usedArray[i]) {
+                availableIndexes.Add(i);
+            }
         }
+        if (availableIndexes.Count > 0) {
+            int randomIndex = availableIndexes[Random.Shared.Next(0, availableIndexes.Count)];
+            sets[currentSetIndex].usedArray[randomIndex] = true;
+            return sets[currentSetIndex].tileArray[randomIndex];
+        }
+
+        return null;
     }
 
     private double GetActualHeightMultiplier() {
@@ -238,7 +257,7 @@ public partial class GameView : UserControl {
 
         // Sets to null if out of bounds
         int lastDockColumn = DockGrid.ColumnDefinitions.Count - 1;
-        int lastDockRow = DockGrid.RowDefinitions.Count - 1;
+        int lastDockRow = DockGrid.RowDefinitions.Count;
         hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= lastDockColumn ? hoverDockCellColumn : null;
         hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= lastDockRow ? hoverDockCellRow : null;
 
