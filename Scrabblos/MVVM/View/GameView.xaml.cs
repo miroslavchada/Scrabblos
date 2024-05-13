@@ -16,8 +16,7 @@ public partial class GameView : UserControl {
         Instance = this;
 
         TileBlock test = new TileBlock(new Tile('S', 1), "mirek.ico");
-        Grid.SetColumn(test, 2);
-        DockGrid.Children.Add(test);
+        AddTileToDockGrid(test, 3);
         DockGridFill();
     }
 
@@ -71,8 +70,8 @@ public partial class GameView : UserControl {
         }, "Čeština oficiální")
     };
 
-    private TileBlock?[,] playBoard = new TileBlock?[15, 15];
-    private TileBlock?[] dockBoard = new TileBlock?[7];
+    private TileBlock?[,] playArray = new TileBlock?[15, 15];
+    private TileBlock?[] dockArray = new TileBlock?[7];
 
     #region Tile dragging
 
@@ -120,39 +119,56 @@ public partial class GameView : UserControl {
             int gameCellColumn = (int)hoverPlayCellColumn;
             int gameCellRow = (int)hoverPlayCellRow;
 
-            // Change tiles parent if it is not same as the new one
-            Grid draggableParent = draggable.Parent as Grid;
-            if (draggableParent != PlayGrid) {
-                draggableParent.Children.Remove(draggable);
-                PlayGrid.Children.Add(draggable);
+            // If there is already a tile in the cell - do nothing
+            if (playArray[gameCellColumn, gameCellRow] != null) {
+                transform.X = 0;
+                transform.Y = 0;
+                draggable.ReleaseMouseCapture();
+                Panel.SetZIndex(draggable, 0);
+                return;
             }
 
-            // Set the tile correct cell
-            Grid.SetColumn(draggable, gameCellColumn);
-            Grid.SetRow(draggable, gameCellRow);
+            // Transition from DockGrid to PlayGrid
+            Grid draggableParent = draggable.Parent as Grid;
+            if (draggableParent != PlayGrid) {
+                RemoveTileFromDockGrid(draggable as TileBlock);
+                AddTileToPlayGrid(draggable as TileBlock, gameCellColumn, gameCellRow);
+            }
+            // Move in PlayGrid if already in PlayGrid
+            else {
+                MoveTileInPlayGrid(draggable as TileBlock, gameCellColumn, gameCellRow);
+            }
         } // DockGrid
         else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
             // int? to int (can't be null anymore)
             int dockCellColumn = (int)hoverDockCellColumn;
-            int dockCellRow = (int)hoverDockCellRow;
 
-            // Change tiles parent if it is not same as the new one
-            Grid draggableParent = draggable.Parent as Grid;
-            if (draggableParent != DockGrid) {
-                draggableParent.Children.Remove(draggable);
-                DockGrid.Children.Add(draggable);
+            // If there is already a tile in the cell - do nothing
+            if (dockArray[dockCellColumn] != null)
+            {
+                transform.X = 0;
+                transform.Y = 0;
+                draggable.ReleaseMouseCapture();
+                Panel.SetZIndex(draggable, 0);
+                return;
             }
 
-            // Set the tile correct cell
-            Grid.SetColumn(draggable, dockCellColumn);
-            Grid.SetRow(draggable, dockCellRow);
+            // Transition from PlayGrid to DockGrid
+            Grid draggableParent = draggable.Parent as Grid;
+            if (draggableParent != DockGrid) {
+                RemoveTileFromPlayGrid(draggable as TileBlock);
+                AddTileToDockGrid(draggable as TileBlock, dockCellColumn);
+            }
+            // Move in DockGrid if already in DockGrid
+            else {
+                MoveTileInDockGrid(draggable as TileBlock, dockCellColumn);
+            }
         }
+
+        // Snap back if not placed in any grid
         transform.X = 0;
         transform.Y = 0;
-
         draggable.ReleaseMouseCapture();
-
-
         Panel.SetZIndex(draggable, 0);
     }
 
@@ -167,18 +183,18 @@ public partial class GameView : UserControl {
         }
     }
 
-    #endregion
+    #endregion Tile dragging
 
     private void DockGridFill() {
-        for (int i = 0; i < dockBoard.Length; i++) {
-            if (dockBoard[i] != null)
+
+        //new TileBlock(GetRandomAvailableTile(), $"tile{dockGridTiles[i].character}.jpg");
+        for (int i = 0; i < dockArray.Length; i++) {
+            if (dockArray[i] != null)
                 continue;
 
             //new TileBlock(GetRandomAvailableTile(), $"tile{dockGridTiles[i].character}.jpg");
             TileBlock tileBlock = new TileBlock(GetRandomAvailableTile(), $"tileS.jpg");
-            Grid.SetColumn(tileBlock, i);
-
-            DockGrid.Children.Add(tileBlock);
+            AddTileToDockGrid(tileBlock, i);
         }
     }
 
@@ -198,6 +214,72 @@ public partial class GameView : UserControl {
 
         return null;
     }
+
+    #region Tile manipulation
+
+    private void AddTileToPlayGrid(TileBlock tileBlock, int column, int row) {
+        if (playArray[column, row] != null)
+            return;
+
+        playArray[column, row] = tileBlock;
+        PlayGrid.Children.Add(tileBlock);
+        Grid.SetColumn(tileBlock, column);
+        Grid.SetRow(tileBlock, row);
+    }
+
+    private void MoveTileInPlayGrid(TileBlock tileBlock, int column, int row) {
+        if (playArray[column, row] != null)
+            return;
+
+        int oldColumn = Grid.GetColumn(tileBlock);
+        int oldRow = Grid.GetRow(tileBlock);
+        playArray[oldColumn, oldRow] = null;
+
+        Grid.SetColumn(tileBlock, column);
+        Grid.SetRow(tileBlock, row);
+        playArray[column, row] = tileBlock;
+    }
+
+    private void RemoveTileFromPlayGrid(TileBlock tileBlock)
+    {
+        int column = Grid.GetColumn(tileBlock);
+        int row = Grid.GetRow(tileBlock);
+
+        playArray[column, row] = null;
+        PlayGrid.Children.Remove(tileBlock);
+    }
+
+    private void AddTileToDockGrid(TileBlock tileBlock, int column)
+    {
+        if (dockArray[column] != null)
+            return;
+
+        dockArray[column] = tileBlock;
+        DockGrid.Children.Add(tileBlock);
+        Grid.SetColumn(tileBlock, column);
+    }
+
+    private void MoveTileInDockGrid(TileBlock tileBlock, int column)
+    {
+        if (dockArray[column] != null)
+            return;
+
+        int oldColumn = Grid.GetColumn(tileBlock);
+        dockArray[oldColumn] = null;
+
+        Grid.SetColumn(tileBlock, column);
+        Grid.SetRow(tileBlock, 0);
+        dockArray[column] = tileBlock;
+    }
+
+    private void RemoveTileFromDockGrid(TileBlock tileBlock)
+    {
+        int column = Grid.GetColumn(tileBlock);
+        dockArray[column] = null;
+        DockGrid.Children.Remove(tileBlock);
+    }
+
+    #endregion Tile manipulation
 
     private double GetActualHeightMultiplier() {
         return 2160 / GameViewBox.ActualHeight;

@@ -79,6 +79,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
+
                     </Grid>
 
                     <Button Content="Pauza" Name="BtnPauseGame"
