@@ -66,7 +66,7 @@ public partial class GameView : UserControl {
             { new Tile('Ý', 4), 2 },
             { new Tile('Z', 2), 2 },
             { new Tile('Ž', 4), 1 },
-            { new Tile(' ', 0), 2 }
+            { new Tile('_', 0), 2 }
         }, "Čeština oficiální")
     };
 
@@ -255,8 +255,9 @@ public partial class GameView : UserControl {
             if (dockArray[i] != null)
                 continue;
 
-            //new TileBlock(GetRandomAvailableTile(), $"tile{dockGridTiles[i].character}.jpg");
-            TileBlock tileBlock = new TileBlock(GetRandomAvailableTile(), $"tileS.jpg");
+            Tile tile = GetRandomAvailableTile();
+            //TileBlock tileBlock = new TileBlock(tile, $"tile{tile.character}.jpg");
+            TileBlock tileBlock = new TileBlock(tile, $"tileS.jpg");
             AddTileToDockGrid(tileBlock, i);
         }
     }

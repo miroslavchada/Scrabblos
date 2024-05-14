@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="MVVM\View\mirek.ico" />
+    <None Remove="MVVM\mirek.ico" />
+    <None Remove="Resources\board.jpg" />
     <None Remove="Resources\mirek.ico" />
     <None Remove="Resources\tileS.jpg" />
   </ItemGroup>
@@ -30,7 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="MVVM\View\mirek.ico" />
+    <Resource Include="MVVM\mirek.ico" />
+    <Resource Include="Resources\board.jpg" />
     <Resource Include="Resources\mirek.ico" />
     <Resource Include="Resources\tileS.jpg" />
   </ItemGroup>

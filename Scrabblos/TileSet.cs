@@ -19,7 +19,7 @@ class TileSet {
                 usedTemp.Add(false);
             }
         }
-        this.tileArray = tilesTemp.ToArray();
+        tileArray = tilesTemp.ToArray();
         usedArray = usedTemp.ToArray();
     }
 }

@@ -61,6 +61,16 @@ namespace Scrabblos.Properties {
         }
         
         /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] board {
+            get {
+                object obj = ResourceManager.GetObject("board", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Vyhledá lokalizovaný řetězec podobný A	11835863
         ///Á	4310
         ///À	211

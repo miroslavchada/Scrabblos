@@ -11,7 +11,7 @@
              Loaded="GameView_OnLoaded"
              Unloaded="GameView_OnUnloaded"
              MouseMove="GameView_OnMouseMove">
-    <Grid Name="GameGrid">
+    <Grid>
         <Viewbox Name="GameViewBox">
             <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
@@ -24,12 +24,16 @@
                     </Grid>
 
                     <Grid Height="1632" Width="1632"
-                          Background="Black" Canvas.Left="624" Canvas.Top="208" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                          Canvas.Left="624" Canvas.Top="208" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Grid.Background>
+                            <ImageBrush Stretch="UniformToFill" ImageSource="/Resources/board.jpg"/>
+                        </Grid.Background>
+                    </Grid>
 
                     <Grid Name="PlayGrid"
                           Height="1440" Width="1440"
                           Canvas.Left="720" Canvas.Top="304"
-                          Background="Wheat" ShowGridLines="True">
+                          ShowGridLines="False">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>

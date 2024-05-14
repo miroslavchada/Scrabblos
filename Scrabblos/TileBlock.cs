@@ -9,13 +9,15 @@ class TileBlock : Image
 {
     public Tile tile { get; private set; }
 
+    private float _scale = .92f;
+
     public TileBlock(Tile tile, string resourceName)
     {
         this.tile = tile;
         BitmapImage image = new BitmapImage(new Uri($"pack://application:,,,/Scrabblos;component/Resources/{resourceName}"));
         Source = image;
-        Height = 96;
-        Width = 96;
+        Height = 96 * _scale;
+        Width = 96 * _scale;
         Margin = new System.Windows.Thickness(0);
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
