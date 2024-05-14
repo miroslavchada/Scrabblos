@@ -14,8 +14,8 @@ class TileBlock : Image
         this.tile = tile;
         BitmapImage image = new BitmapImage(new Uri($"pack://application:,,,/Scrabblos;component/Resources/{resourceName}"));
         Source = image;
-        Width = 96;
         Height = 96;
+        Width = 96;
         Margin = new System.Windows.Thickness(0);
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center;

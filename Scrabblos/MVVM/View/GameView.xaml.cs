@@ -15,8 +15,8 @@ public partial class GameView : UserControl {
 
         Instance = this;
 
-        TileBlock test = new TileBlock(new Tile('S', 1), "mirek.ico");
-        AddTileToDockGrid(test, 3);
+        TileBlock test = new TileBlock(new Tile(' ', 0), "mirek.ico");
+        AddTileToDockGrid(test, 2);
         DockGridFill();
     }
 
@@ -79,6 +79,8 @@ public partial class GameView : UserControl {
     private Point clickPosition;
     private TranslateTransform originTT;
 
+    private bool previewActive;
+
     private int? hoverPlayCellColumn, hoverDockCellColumn;
     private int? hoverPlayCellRow, hoverDockCellRow;
 
@@ -107,6 +109,7 @@ public partial class GameView : UserControl {
     }
 
     public void TileBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+
         isDragging = false;
         var draggable = sender as Image;
         var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
@@ -171,11 +174,29 @@ public partial class GameView : UserControl {
             }
         }
 
-        // Snap back if not placed in any grid
+        DisablePreview();
+
+        // Reset position in cell
         transform.X = 0;
         transform.Y = 0;
         draggable.ReleaseMouseCapture();
         Panel.SetZIndex(draggable, 5);
+    }
+
+    Image preview = new()
+    {
+        Opacity = 0.2,
+
+        HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+        VerticalAlignment = System.Windows.VerticalAlignment.Center
+    };
+
+    private void DisablePreview() {
+        if (previewActive) {
+            PlayGrid.Children.Remove(preview);
+            DockGrid.Children.Remove(preview);
+            previewActive = false;
+        }
     }
 
     public void TileBlock_MouseMove(object sender, MouseEventArgs e) {
@@ -186,6 +207,43 @@ public partial class GameView : UserControl {
             transform.X = originTT.X + (currentPosition.X - clickPosition.X) * GetActualWidthMultiplier();
             transform.Y = originTT.Y + (currentPosition.Y - clickPosition.Y) * GetActualHeightMultiplier();
             draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
+
+            preview.Source = draggableControl.Source;
+            preview.Height = draggableControl.Height;
+            preview.Width = draggableControl.Width;
+            Margin = draggableControl.Margin;
+
+            // Preview projection
+            Grid? grid = null;
+            int previewCellColumn = 0;
+            int previewCellRow = 0;
+
+            // Unify cell position
+            if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
+                grid = PlayGrid;
+                previewCellColumn = (int)hoverPlayCellColumn;
+                previewCellRow = (int)hoverPlayCellRow;
+            }
+            else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
+                grid = DockGrid;
+                previewCellColumn = (int)hoverDockCellColumn;
+                previewCellRow = (int)hoverDockCellRow;
+            }
+
+            if (grid != null) {
+                if (!previewActive) {
+                    grid.Children.Add(preview);
+                    Panel.SetZIndex(preview, 4);
+                }
+
+                Grid.SetColumn(preview, previewCellColumn);
+                Grid.SetRow(preview, previewCellRow);
+
+                previewActive = true;
+            }
+            else {
+                DisablePreview();
+            }
         }
     }
 
@@ -193,7 +251,6 @@ public partial class GameView : UserControl {
 
     private void DockGridFill() {
 
-        //new TileBlock(GetRandomAvailableTile(), $"tile{dockGridTiles[i].character}.jpg");
         for (int i = 0; i < dockArray.Length; i++) {
             if (dockArray[i] != null)
                 continue;
@@ -229,6 +286,7 @@ public partial class GameView : UserControl {
 
         playArray[column, row] = tileBlock;
         PlayGrid.Children.Add(tileBlock);
+        Panel.SetZIndex(tileBlock, 5);
         Grid.SetColumn(tileBlock, column);
         Grid.SetRow(tileBlock, row);
     }
@@ -260,6 +318,7 @@ public partial class GameView : UserControl {
 
         dockArray[column] = tileBlock;
         DockGrid.Children.Add(tileBlock);
+        Panel.SetZIndex(tileBlock, 5);
         Grid.SetColumn(tileBlock, column);
     }
 
