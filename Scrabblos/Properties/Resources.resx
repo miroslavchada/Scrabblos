@@ -127,7 +127,124 @@
   <data name="mirek" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\mirek.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="tileA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileA.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileB.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileC" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileC.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileD" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileD.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileE.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileF" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileF.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileG" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileG.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileH" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileH.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileI.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileJ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileJ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileK" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileK.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileL.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileM.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileN" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileN.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileO" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileO.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileP" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileP.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileR.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="tileS" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tileS.jpg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\tileS.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileT.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileU" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileU.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileV" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileV.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileX.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileY" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileY.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileZ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileZ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tile_" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tile_.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÁ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÁ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÉ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÉ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÍ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÍ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÓ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÓ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÚ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÚ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileÝ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileÝ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileČ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileČ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileĎ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileĎ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileĚ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileĚ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŇ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŇ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŘ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŘ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŠ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŠ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŤ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŤ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŮ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŮ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tileŽ" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tileŽ.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

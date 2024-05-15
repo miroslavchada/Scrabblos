@@ -12,11 +12,8 @@ namespace Scrabblos.MVVM.View;
 public partial class GameView : UserControl {
     public GameView() {
         InitializeComponent();
-
         Instance = this;
 
-        TileBlock test = new TileBlock(new Tile(' ', 0), "mirek.ico");
-        AddTileToDockGrid(test, 2);
         DockGridFill();
     }
 
@@ -250,14 +247,12 @@ public partial class GameView : UserControl {
     #endregion Tile dragging
 
     private void DockGridFill() {
-
         for (int i = 0; i < dockArray.Length; i++) {
             if (dockArray[i] != null)
                 continue;
 
             Tile tile = GetRandomAvailableTile();
-            //TileBlock tileBlock = new TileBlock(tile, $"tile{tile.character}.jpg");
-            TileBlock tileBlock = new TileBlock(tile, $"tileS.jpg");
+            TileBlock tileBlock = new TileBlock(tile, $"tile{tile.character}.png");
             AddTileToDockGrid(tileBlock, i);
         }
     }

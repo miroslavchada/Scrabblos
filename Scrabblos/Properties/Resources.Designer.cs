@@ -136,9 +136,399 @@ namespace Scrabblos.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
         /// </summary>
+        internal static byte[] tile_ {
+            get {
+                object obj = ResourceManager.GetObject("tile_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileA {
+            get {
+                object obj = ResourceManager.GetObject("tileA", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÁ {
+            get {
+                object obj = ResourceManager.GetObject("tileÁ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileB {
+            get {
+                object obj = ResourceManager.GetObject("tileB", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileC {
+            get {
+                object obj = ResourceManager.GetObject("tileC", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileČ {
+            get {
+                object obj = ResourceManager.GetObject("tileČ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileD {
+            get {
+                object obj = ResourceManager.GetObject("tileD", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileĎ {
+            get {
+                object obj = ResourceManager.GetObject("tileĎ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileE {
+            get {
+                object obj = ResourceManager.GetObject("tileE", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÉ {
+            get {
+                object obj = ResourceManager.GetObject("tileÉ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileĚ {
+            get {
+                object obj = ResourceManager.GetObject("tileĚ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileF {
+            get {
+                object obj = ResourceManager.GetObject("tileF", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileG {
+            get {
+                object obj = ResourceManager.GetObject("tileG", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileH {
+            get {
+                object obj = ResourceManager.GetObject("tileH", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileI {
+            get {
+                object obj = ResourceManager.GetObject("tileI", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÍ {
+            get {
+                object obj = ResourceManager.GetObject("tileÍ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileJ {
+            get {
+                object obj = ResourceManager.GetObject("tileJ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileK {
+            get {
+                object obj = ResourceManager.GetObject("tileK", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileL {
+            get {
+                object obj = ResourceManager.GetObject("tileL", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileM {
+            get {
+                object obj = ResourceManager.GetObject("tileM", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileN {
+            get {
+                object obj = ResourceManager.GetObject("tileN", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŇ {
+            get {
+                object obj = ResourceManager.GetObject("tileŇ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileO {
+            get {
+                object obj = ResourceManager.GetObject("tileO", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÓ {
+            get {
+                object obj = ResourceManager.GetObject("tileÓ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileP {
+            get {
+                object obj = ResourceManager.GetObject("tileP", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileR {
+            get {
+                object obj = ResourceManager.GetObject("tileR", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŘ {
+            get {
+                object obj = ResourceManager.GetObject("tileŘ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
         internal static byte[] tileS {
             get {
                 object obj = ResourceManager.GetObject("tileS", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŠ {
+            get {
+                object obj = ResourceManager.GetObject("tileŠ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileT {
+            get {
+                object obj = ResourceManager.GetObject("tileT", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŤ {
+            get {
+                object obj = ResourceManager.GetObject("tileŤ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileU {
+            get {
+                object obj = ResourceManager.GetObject("tileU", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÚ {
+            get {
+                object obj = ResourceManager.GetObject("tileÚ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŮ {
+            get {
+                object obj = ResourceManager.GetObject("tileŮ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileV {
+            get {
+                object obj = ResourceManager.GetObject("tileV", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileX {
+            get {
+                object obj = ResourceManager.GetObject("tileX", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileY {
+            get {
+                object obj = ResourceManager.GetObject("tileY", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileÝ {
+            get {
+                object obj = ResourceManager.GetObject("tileÝ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileZ {
+            get {
+                object obj = ResourceManager.GetObject("tileZ", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tileŽ {
+            get {
+                object obj = ResourceManager.GetObject("tileŽ", resourceCulture);
                 return ((byte[])(obj));
             }
         }
