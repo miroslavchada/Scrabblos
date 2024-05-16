@@ -9,9 +9,9 @@ namespace Scrabblos;
 public partial class MainWindow : Window {
     public MainWindow() {
         InitializeComponent();
-
         Instance = this;
     }
+
     public static MainWindow Instance { get; private set; }
 
     public Action<Key> OnAnyKeyDown;
