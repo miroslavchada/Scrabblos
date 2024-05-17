@@ -22,6 +22,8 @@ public partial class GameView : UserControl {
     private bool escapeMenu;
     private int currentSetIndex = 0;
 
+    private Player[] playerArray;
+
     private List<TileSet> sets = new() {
         new TileSet(new Dictionary<Tile, int> {
             { new Tile('A', 1), 5 },
@@ -69,6 +71,15 @@ public partial class GameView : UserControl {
 
     private TileBlock?[,] playArray = new TileBlock?[15, 15];
     private TileBlock?[] dockArray = new TileBlock?[7];
+
+    private void OnStartGame(string[] players) {
+        playerArray = new Player[players.Length];
+
+        for (int i = 0; i < players.Length; i++) {
+            Player player = new Player(players[i]);
+            playerArray[i] = player;
+        }
+    }
 
     #region Tile dragging
 
@@ -359,10 +370,12 @@ public partial class GameView : UserControl {
 
     private void GameView_OnLoaded(object sender, RoutedEventArgs e) {
         MainWindow.Instance.OnAnyKeyDown += OnAnyKeyDown;
+        HomeView.Instance.OnStartGame += OnStartGame;
     }
 
     private void GameView_OnUnloaded(object sender, RoutedEventArgs e) {
         MainWindow.Instance.OnAnyKeyDown -= OnAnyKeyDown;
+        HomeView.Instance.OnStartGame -= OnStartGame;
     }
 
     private void OnAnyKeyDown(Key key) {

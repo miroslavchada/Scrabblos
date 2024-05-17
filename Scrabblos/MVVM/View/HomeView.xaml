@@ -27,7 +27,7 @@
                             <TextBlock Text="Hráč 1" Name="Player1Label"
                                        FontSize="48"
                                        TextAlignment="Center"/>
-                            <TextBox Text="{Binding Player1Name}" Name="Player1TextBox"
+                            <TextBox Text="{Binding Player1Name}" Name="Player1TextBox" Tag="1"
                                      TextChanged="PlayerTextBox_OnTextChanged"
                                      FontSize="48"
                                      Width="400"
@@ -37,7 +37,7 @@
                             <TextBlock Text="Hráč 2" Name="Player2Label"
                                        FontSize="48" Foreground="DarkGray"
                                        TextAlignment="Center"/>
-                            <TextBox Text="{Binding Player1Name}" Name="Player2TextBox"
+                            <TextBox Text="{Binding Player1Name}" Name="Player2TextBox" Tag="2"
                                      TextChanged="PlayerTextBox_OnTextChanged"
                                      IsEnabled="False"
                                      FontSize="48" Width="400" TextAlignment="Center"/>
@@ -46,7 +46,7 @@
                             <TextBlock Text="Hráč 3" Name="Player3Label"
                                        FontSize="48" Foreground="DarkGray"
                                        TextAlignment="Center"/>
-                            <TextBox Text="{Binding Player1Name}" Name="Player3TextBox"
+                            <TextBox Text="{Binding Player1Name}" Name="Player3TextBox" Tag="3"
                                      TextChanged="PlayerTextBox_OnTextChanged"
                                      IsEnabled="False"
                                      FontSize="48" Width="400" TextAlignment="Center"/>
@@ -55,7 +55,7 @@
                             <TextBlock Text="Hráč 4" Name="Player4Label"
                                        FontSize="48" Foreground="DarkGray"
                                        TextAlignment="Center"/>
-                            <TextBox Text="{Binding Player1Name}" Name="Player4TextBox"
+                            <TextBox Text="{Binding Player1Name}" Name="Player4TextBox" Tag="4"
                                      TextChanged="PlayerTextBox_OnTextChanged"
                                      IsEnabled="False"
                                      FontSize="48" Width="400" TextAlignment="Center"/>
