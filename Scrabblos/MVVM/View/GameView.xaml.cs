@@ -23,6 +23,7 @@ public partial class GameView : UserControl {
     private int currentSetIndex = 0;
 
     private Player[] playerArray;
+    private int currentPlayerIndex = 0;
 
     private List<TileSet> sets = new() {
         new TileSet(new Dictionary<Tile, int> {
@@ -69,8 +70,8 @@ public partial class GameView : UserControl {
         }, "Čeština oficiální")
     };
 
-    private TileBlock?[,] playArray = new TileBlock?[15, 15];
-    private TileBlock?[] dockArray = new TileBlock?[7];
+    private TileBlock[,] playArray = new TileBlock[15, 15];
+    private TileBlock[] dockArray = new TileBlock[7];
 
     private void OnStartGame(string[] players) {
         playerArray = new Player[players.Length];
@@ -256,6 +257,61 @@ public partial class GameView : UserControl {
     }
 
     #endregion Tile dragging
+
+    private void NextPlayer() {
+        currentPlayerIndex = currentPlayerIndex >= playerArray.Length - 1 ? 0 : currentPlayerIndex + 1;
+    }
+
+    private void LoadDock(Player player) {
+        // Clear grid
+        foreach (TileBlock tileBlock in DockGrid.Children) {
+            RemoveTileFromDockGrid(tileBlock);
+        }
+
+        // Restore players dock
+        for (int i = 0; i < dockArray.Length; i++) {
+            AddTileToDockGrid(player.Dock[i], i);
+        }
+    }
+
+    private void SaveDock(Player player) {
+        // Rewrite players dock
+        player.Dock = dockArray;
+
+        // Clear grid
+        foreach (TileBlock tileBlock in DockGrid.Children) {
+            RemoveTileFromDockGrid(tileBlock);
+        }
+    }
+
+    private void RoundApprove_Click(object sender, RoutedEventArgs e) {
+        // If the play is not valid
+        if (false)
+            return;
+
+        ControlsGrid.IsEnabled = false;
+        ControlsGrid.Visibility = Visibility.Hidden;
+        BtnNextPlayer.IsEnabled = true;
+        BtnNextPlayer.Visibility = Visibility.Visible;
+
+        SaveDock(playerArray[currentPlayerIndex]);
+    }
+
+    private void BtnNextPlayer_Click(object sender, RoutedEventArgs e) {
+        ControlsGrid.IsEnabled = true;
+        ControlsGrid.Visibility = Visibility.Visible;
+        BtnNextPlayer.IsEnabled = false;
+        BtnNextPlayer.Visibility = Visibility.Hidden;
+
+        NextPlayer();
+        LoadDock(playerArray[currentPlayerIndex]);
+        DockGridFill();
+        playerArray[currentPlayerIndex].Dock = dockArray;
+    }
+
+    private void BtnDockFill_Click(object sender, RoutedEventArgs e) {
+        DockGridFill();
+    }
 
     private void DockGridFill() {
         for (int i = 0; i < dockArray.Length; i++) {
