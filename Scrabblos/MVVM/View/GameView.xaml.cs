@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Image = System.Windows.Controls.Image;
 
 namespace Scrabblos.MVVM.View;
 
@@ -13,8 +14,6 @@ public partial class GameView : UserControl {
     public GameView() {
         InitializeComponent();
         Instance = this;
-
-        DockGridFill();
     }
 
     public static GameView Instance { get; private set; }
@@ -73,13 +72,17 @@ public partial class GameView : UserControl {
     private TileBlock[,] playArray = new TileBlock[15, 15];
     private TileBlock[] dockArray = new TileBlock[7];
 
-    private void OnStartGame(string[] players) {
+    public void SetPlayers(string[] players) {
         playerArray = new Player[players.Length];
 
         for (int i = 0; i < players.Length; i++) {
+            // New player from name string
             Player player = new Player(players[i]);
+            SaveDock(player);
             playerArray[i] = player;
         }
+
+        //LoadDock(playerArray[currentPlayerIndex]);
     }
 
     #region Tile dragging
@@ -192,8 +195,7 @@ public partial class GameView : UserControl {
         Panel.SetZIndex(draggable, 5);
     }
 
-    Image preview = new()
-    {
+    private Image preview = new() {
         Opacity = 0.2,
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
@@ -264,7 +266,8 @@ public partial class GameView : UserControl {
 
     private void LoadDock(Player player) {
         // Clear grid
-        foreach (TileBlock tileBlock in DockGrid.Children) {
+        foreach (TileBlock tileBlock in dockArray) {
+            if (tileBlock == null) continue;
             RemoveTileFromDockGrid(tileBlock);
         }
 
@@ -275,17 +278,18 @@ public partial class GameView : UserControl {
     }
 
     private void SaveDock(Player player) {
+        DockGridFill();
         // Rewrite players dock
         player.Dock = dockArray;
 
         // Clear grid
-        foreach (TileBlock tileBlock in DockGrid.Children) {
+        foreach (TileBlock tileBlock in dockArray) {
             RemoveTileFromDockGrid(tileBlock);
         }
     }
 
     private void RoundApprove_Click(object sender, RoutedEventArgs e) {
-        // If the play is not valid
+        // If the play is not valid - do not approve
         if (false)
             return;
 
@@ -426,12 +430,10 @@ public partial class GameView : UserControl {
 
     private void GameView_OnLoaded(object sender, RoutedEventArgs e) {
         MainWindow.Instance.OnAnyKeyDown += OnAnyKeyDown;
-        HomeView.Instance.OnStartGame += OnStartGame;
     }
 
     private void GameView_OnUnloaded(object sender, RoutedEventArgs e) {
         MainWindow.Instance.OnAnyKeyDown -= OnAnyKeyDown;
-        HomeView.Instance.OnStartGame -= OnStartGame;
     }
 
     private void OnAnyKeyDown(Key key) {

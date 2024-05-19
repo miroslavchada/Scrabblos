@@ -11,7 +11,5 @@ namespace Scrabblos {
         private GameManager() {
             Instance = this;
         }
-
-        public int PlayerCount { get; private set; }
     }
 }

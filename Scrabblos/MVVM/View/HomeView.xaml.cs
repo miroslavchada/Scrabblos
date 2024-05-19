@@ -10,21 +10,17 @@ namespace Scrabblos.MVVM.View;
 public partial class HomeView : UserControl {
     public HomeView() {
         InitializeComponent();
-        Instance = this;
     }
-
-    public static HomeView Instance { get; private set; }
-
-    public Action<string[]> OnStartGame;
 
     private List<string> players = new();
 
-    private void CloseApp_OnClick(object sender, RoutedEventArgs e) {
-        Environment.Exit(0);
+    private void StartGame_OnClick(object sender, RoutedEventArgs e) {
+        GameView.Instance.SetPlayers(players.ToArray());
+        // Code to navigate to the GameView or pass the players list to the existing GameView instance
     }
 
-    private void StartGame_OnClick(object sender, RoutedEventArgs e) {
-        OnStartGame?.Invoke(players.ToArray());
+    private void CloseApp_OnClick(object sender, RoutedEventArgs e) {
+        Environment.Exit(0);
     }
 
     private void PlayerTextBox_OnTextChanged(object sender, TextChangedEventArgs e) {
@@ -49,13 +45,12 @@ public partial class HomeView : UserControl {
         }
 
         // Allows player to start the game if at least one name is filled
-        bool atLeastOneFilled = false;
         players.Clear();
+        bool atLeastOneFilled = false;
         foreach (TextBox tb in playerTB) {
             if (tb.Text != "") {
                 atLeastOneFilled = true;
                 players.Add(tb.Text);
-                break;
             }
         }
         StartGame.IsEnabled = atLeastOneFilled;
