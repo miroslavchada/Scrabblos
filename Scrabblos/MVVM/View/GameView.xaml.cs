@@ -14,6 +14,12 @@ public partial class GameView : UserControl {
     public GameView() {
         InitializeComponent();
         Instance = this;
+
+        // Set propper z-indexes
+        Grid.SetZIndex(BtnNextPlayer, 2);
+
+        SetPlayers(Application.Current.Properties["Players"] as string[]);
+        ScoreBoardRender(); 
     }
 
     public static GameView Instance { get; private set; }
@@ -65,11 +71,11 @@ public partial class GameView : UserControl {
             { new Tile('Ý', 4), 2 },
             { new Tile('Z', 2), 2 },
             { new Tile('Ž', 4), 1 },
-            { new Tile('_', 0), 2 }
         }, "Čeština oficiální")
     };
 
     private TileBlock[,] playArray = new TileBlock[15, 15];
+    private TileBlock[,] confirmedPlayArray = new TileBlock[15, 15];
     private TileBlock[] dockArray = new TileBlock[7];
 
     public void SetPlayers(string[] players) {
@@ -82,7 +88,7 @@ public partial class GameView : UserControl {
             playerArray[i] = player;
         }
 
-        //LoadDock(playerArray[currentPlayerIndex]);
+        LoadDock(playerArray[currentPlayerIndex]);
     }
 
     #region Tile dragging
@@ -273,14 +279,14 @@ public partial class GameView : UserControl {
 
         // Restore players dock
         for (int i = 0; i < dockArray.Length; i++) {
-            AddTileToDockGrid(player.Dock[i], i);
+            AddTileToDockGrid(player.GetDock()[i], i);
         }
     }
 
     private void SaveDock(Player player) {
         DockGridFill();
         // Rewrite players dock
-        player.Dock = dockArray;
+        player.SetDock(dockArray);
 
         // Clear grid
         foreach (TileBlock tileBlock in dockArray) {
@@ -290,8 +296,14 @@ public partial class GameView : UserControl {
 
     private void RoundApprove_Click(object sender, RoutedEventArgs e) {
         // If the play is not valid - do not approve
-        if (false)
-            return;
+        //switch (ValidatePlay()) {
+        //    case 0:
+        //        break;
+        //    case 1:
+        //        return;
+        //}
+        List<string> words = ValidatePlay();
+        TbInfo.Text = words.Count > 0 ? $"Slova: {string.Join(", ", words)}" : "Nevalidní tah";
 
         ControlsGrid.IsEnabled = false;
         ControlsGrid.Visibility = Visibility.Hidden;
@@ -299,6 +311,8 @@ public partial class GameView : UserControl {
         BtnNextPlayer.Visibility = Visibility.Visible;
 
         SaveDock(playerArray[currentPlayerIndex]);
+        NextPlayer();
+        ScoreBoardRender();
     }
 
     private void BtnNextPlayer_Click(object sender, RoutedEventArgs e) {
@@ -307,14 +321,9 @@ public partial class GameView : UserControl {
         BtnNextPlayer.IsEnabled = false;
         BtnNextPlayer.Visibility = Visibility.Hidden;
 
-        NextPlayer();
         LoadDock(playerArray[currentPlayerIndex]);
         DockGridFill();
-        playerArray[currentPlayerIndex].Dock = dockArray;
-    }
-
-    private void BtnDockFill_Click(object sender, RoutedEventArgs e) {
-        DockGridFill();
+        playerArray[currentPlayerIndex].SetDock(dockArray);
     }
 
     private void DockGridFill() {
@@ -343,6 +352,175 @@ public partial class GameView : UserControl {
         }
 
         return null;
+    }
+
+    private List<string> ValidatePlay() {
+
+        TileBlock[,] newPlayArray = new TileBlock[15, 15];
+
+        // Gets new play array by subtracting confirmed play array from play array
+        for (int column = 0; column < 15; column++) {
+            for (int row = 0; row < 15; row++) {
+                TileBlock tile = playArray[column, row];
+                if (tile != null && confirmedPlayArray[column, row] != tile) {
+                    newPlayArray[column, row] = tile;
+                }
+            }
+        }
+
+        List<string> words = new List<string>();
+
+        // Check rows
+        for (int row = 0; row < 15; row++) {
+            int startColumn = -1;
+            int endColumn = -1;
+            bool continuous = false;
+
+            int? predictingColumn = null;
+
+            for (int column = 0; column < 15; column++) {
+                if (!continuous) {
+                    if (playArray[column, row] != null) {
+                        if (predictingColumn == null)
+                            predictingColumn = column;
+                    } else {
+                        predictingColumn = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startColumn = predictingColumn != null ? (int)predictingColumn : column;
+                        continuous = true;
+                    }
+                    endColumn = column;
+                }
+                else if (continuous && playArray[column, row] != null) {
+                    endColumn = column;
+                }
+                else if (continuous) {
+                    if (startColumn != endColumn) {
+                        string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                        if (!string.IsNullOrEmpty(word)) {
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                }
+            }
+
+            if (continuous && startColumn != endColumn) {
+                string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                if (!string.IsNullOrEmpty(word)) {
+                    words.Add(word);
+                }
+            }
+        }
+
+        // Check columns
+        for (int column = 0; column < 15; column++) {
+            int startRow = -1;
+            int endRow = -1;
+            bool continuous = false;
+
+            int? predictingRow = null;
+
+            for (int row = 0; row < 15; row++) {
+                if (!continuous) {
+                    if (playArray[column, row] != null) {
+                        if (predictingRow == null)
+                            predictingRow = row;
+                    } else {
+                        predictingRow = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startRow = predictingRow != null ? (int)predictingRow : row;
+                        continuous = true;
+                    }
+                    endRow = row;
+                }
+                else if (continuous && playArray[column, row] != null) {
+                    endRow = row;
+                }
+                else if (continuous) {
+                    if (startRow != endRow) {
+                        string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                        if (!string.IsNullOrEmpty(word)) {
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                }
+            }
+
+            if (continuous && startRow != endRow) {
+                string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                if (!string.IsNullOrEmpty(word)) {
+                    words.Add(word);
+                }
+            }
+        }
+
+        Array.Copy(playArray, confirmedPlayArray, playArray.Length);
+
+        return words;
+    }
+
+    private string GetWordFromPlayArray(int start, int end, int fixedIndex, bool isRow) {
+        string word = "";
+
+        if (isRow) {
+            for (int column = start; column <= end; column++) {
+                TileBlock tile = playArray[column, fixedIndex];
+                if (tile != null) {
+                    word += tile.tile.character;
+                } else {
+                    return "";
+                }
+            }
+        } else {
+            for (int row = start; row <= end; row++) {
+                TileBlock tile = playArray[fixedIndex, row];
+                if (tile != null) {
+                    word += tile.tile.character;
+                } else {
+                    return "";
+                }
+            }
+        }
+
+        return word;
+    }
+
+    private void ScoreBoardRender() {
+        ScoreBoard.Children.Clear();
+
+        TextBlock title = new() {
+            Text = "Tabulka hráčů",
+            FontSize = 68,
+            FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 0, 0, 20)
+        };
+        ScoreBoard.Children.Add(title);
+
+        for (int i = 0; i < playerArray.Length; i++) {
+            TextBlock player = new() {
+                Text = $"{i}) {playerArray[i].Name}: {playerArray[i].Score}",
+                FontSize = 42,
+                FontWeight = FontWeights.Normal,
+                Margin = new Thickness(0, 0, 0, 3)
+            };
+
+            if (i == currentPlayerIndex) {
+                player.FontSize = 48;
+                player.FontWeight = FontWeights.SemiBold;
+            }
+
+            ScoreBoard.Children.Add(player);
+        }
     }
 
     #region Tile manipulation
@@ -482,15 +660,15 @@ public partial class GameView : UserControl {
         hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= lastDockColumn ? hoverDockCellColumn : null;
         hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= lastDockRow ? hoverDockCellRow : null;
 
-        // If in bounds of PlayGrid
-        if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
-            TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
-        } // If in bounds of DockGrid
-        else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
-            TBlockInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
-        } else {
-            TBlockInfo.Text = "Informace jak pán";
-        }
+        //// If in bounds of PlayGrid
+        //if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
+        //    TbInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
+        //} // If in bounds of DockGrid
+        //else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
+        //    TbInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
+        //} else {
+        //    TbInfo.Text = "Informace jak pán";
+        //}
     }
 
     private string CoordsToCell(int columnIndex, int rowIndex)

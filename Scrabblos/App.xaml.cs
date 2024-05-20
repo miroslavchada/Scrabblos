@@ -28,7 +28,6 @@ public partial class App : Application {
         // Register navigation function
         services.AddSingleton<Func<Type, ViewModel>>(serviceProvider => viewModelType => (ViewModel)serviceProvider.GetRequiredService(viewModelType));
 
-
         _serviceProvider = services.BuildServiceProvider();
     }
 

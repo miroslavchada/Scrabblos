@@ -15,8 +15,7 @@ public partial class HomeView : UserControl {
     private List<string> players = new();
 
     private void StartGame_OnClick(object sender, RoutedEventArgs e) {
-        GameView.Instance.SetPlayers(players.ToArray());
-        // Code to navigate to the GameView or pass the players list to the existing GameView instance
+        Application.Current.Properties["Players"] = players.ToArray();
     }
 
     private void CloseApp_OnClick(object sender, RoutedEventArgs e) {
@@ -37,7 +36,7 @@ public partial class HomeView : UserControl {
 
         for (int i = 0; i < playerTB.Length - 1; i++) {
             // Enables 1 TB after 1st not empty TB
-            if (playerTB[i].Text != "" && playerTB[i + 1].Text == "") {
+            if (playerTB[i].Text.Trim() != "" && playerTB[i + 1].Text == "") {
                 playerTB[i + 1].IsEnabled = true;
                 playerLb[i + 1].Foreground = Brushes.Black;
                 break;
@@ -48,9 +47,9 @@ public partial class HomeView : UserControl {
         players.Clear();
         bool atLeastOneFilled = false;
         foreach (TextBox tb in playerTB) {
-            if (tb.Text != "") {
+            if (tb.Text.Trim() != "") {
                 atLeastOneFilled = true;
-                players.Add(tb.Text);
+                players.Add(tb.Text.Trim());
             }
         }
         StartGame.IsEnabled = atLeastOneFilled;

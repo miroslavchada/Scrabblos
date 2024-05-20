@@ -19,8 +19,9 @@
 
                     <Grid Height="156" Width="2108"
                           Background="White" Canvas.Left="386" Canvas.Top="20">
-                        <TextBlock Name="TBlockInfo"
-                                   FontSize="42" Text="Informace jak pán" VerticalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Name="TbInfo"
+                                   FontSize="42"
+                                   VerticalAlignment="Center" TextAlignment="Center"/>
                     </Grid>
 
                     <Grid Height="1632" Width="1632"
@@ -30,7 +31,7 @@
                         </Grid.Background>
                     </Grid>
 
-                    <Grid Name="PlayGrid"
+                    <Grid x:Name="PlayGrid"
                           Height="1440" Width="1440"
                           Canvas.Left="720" Canvas.Top="304"
                           ShowGridLines="False">
@@ -70,23 +71,23 @@
                         </Grid.RowDefinitions>
                     </Grid>
 
-                    <Grid Name="ControlsGrid"
+                    <Grid x:Name="ControlsGrid"
                           Height="80" Width="1246"
                           Canvas.Left="816" Canvas.Top="1985" HorizontalAlignment="Center" VerticalAlignment="Top">
                         <Button Height="80" Width="80"
-                                HorizontalAlignment="Left"></Button>
+                                HorizontalAlignment="Left"/>
                         <Button Height="80" Width="80"
-                                HorizontalAlignment="Left" Margin="100,0,0,0"></Button>
-                        <Button Name="RoundApprove"
+                                HorizontalAlignment="Left" Margin="100,0,0,0"/>
+                        <Button x:Name="RoundApprove"
                                 Click="RoundApprove_Click"
                                 Height="80" Width="80"
                                 HorizontalAlignment="Right" Margin="0,0,100,0"
-                                Background="LightGreen"></Button>
+                                Background="LightGreen"/>
                         <Button Height="80" Width="80"
-                                HorizontalAlignment="Right"></Button>
+                                HorizontalAlignment="Right"/>
                     </Grid>
 
-                    <Grid Name="DockGrid"
+                    <Grid x:Name="DockGrid"
                           Height="140" Width="840"
                           Canvas.Left="1019" Canvas.Top="1955"
                           Background="Wheat" ShowGridLines="True">
@@ -101,21 +102,20 @@
                         </Grid.ColumnDefinitions>
 
                     </Grid>
+                    <StackPanel Name="ScoreBoard"
+                                Height="1800" Width="550"
+                                Canvas.Left="36" Canvas.Top="279">
+                    </StackPanel>
 
-                    <Button Content="Pauza" Name="BtnPauseGame"
+                    <Button Content="Pauza" x:Name="BtnPauseGame"
                             Click="ToggleEscapeMenuButton"
                             Height="80" Width="300"
                             FontSize="36" HorizontalAlignment="Right" Canvas.Right="8" Canvas.Top="40" VerticalAlignment="Top"/>
 
-                    <Button Content="FillDock()" Name="BtnDockFill"
-                        Click="BtnDockFill_Click"
-                        Height="80" Width="300" Background="PaleVioletRed"
-                        FontSize="36" Canvas.Right="8" Canvas.Top="153" HorizontalAlignment="Left" Canvas.Left="2568" VerticalAlignment="Top"/>
-
-                    <Button Content="Hrát" Name="BtnNextPlayer"
+                    <Button Content="Hrát" x:Name="BtnNextPlayer"
                         Click="BtnNextPlayer_Click" IsEnabled="False" Visibility="Hidden"
                         Height="80" Width="300"
-                        FontSize="36" Canvas.Right="8" Canvas.Top="1985" Canvas.Left="1289" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        FontSize="36" Canvas.Right="8" Canvas.Top="1985" Canvas.Left="1290" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </Canvas>
             </Border>
         </Viewbox>
