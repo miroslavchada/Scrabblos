@@ -84,6 +84,32 @@ public partial class GameView : UserControl {
     private TileBlock[,] confirmedPlayArray = new TileBlock[15, 15];
     private TileBlock[] dockArray = new TileBlock[7];
 
+    private enum BonusType {
+        None,
+        DoubleLetter,
+        TripleLetter,
+        DoubleWord,
+        TripleWord
+    }
+
+    private BonusType[,] bonusArray = new BonusType[15, 15] {
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord },
+        { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter}, 
+        { BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord },
+        { BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None },
+        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter},
+        { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord }
+    };
+
     public void SetPlayers(string[] players) {
         playerArray = new Player[players.Length];
 
@@ -300,8 +326,12 @@ public partial class GameView : UserControl {
         }
     }
 
-    private void ReturnTilesToDock(TileBlock[,] newPlayArray) {
-        foreach (TileBlock tileBlock in newPlayArray) {
+    private void RestoreDock_Click(object sender, RoutedEventArgs e) {
+        ReturnTilesToDock();
+    }
+
+    private void ReturnTilesToDock() {
+        foreach (TileBlock tileBlock in GetNewPlayArray()) {
             if (tileBlock == null)
                 continue;
 
@@ -773,7 +803,6 @@ public partial class GameView : UserControl {
     }
 
     private void GameView_OnMouseMove(object sender, MouseEventArgs e) {
-
         // Gets cell by dividing pixels by PlayGrid column/row size
         hoverPlayCellColumn = (int)Math.Floor(e.GetPosition(PlayGrid).X / 96);
         hoverPlayCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
@@ -794,21 +823,11 @@ public partial class GameView : UserControl {
         hoverDockCellColumn = hoverDockCellColumn >= 0 && hoverDockCellColumn <= lastDockColumn ? hoverDockCellColumn : null;
         hoverDockCellRow = hoverDockCellRow >= 0 && hoverDockCellRow <= lastDockRow ? hoverDockCellRow : null;
 
-        //// If in bounds of PlayGrid
-        //if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
-        //    TbInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
-        //} // If in bounds of DockGrid
-        //else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
-        //    TbInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
-        //} else {
-        //    TbInfo.Text = "Informace jak pán";
-        //}
-    }
-
-    private string CoordsToCell(int columnIndex, int rowIndex)
-    {
-        char[] letters = new[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' };
-        
-        return $"{columnIndex + 1}{letters[rowIndex]}";
+        // If in bounds of PlayGrid
+        if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
+            TbInfo.Text = $"Typ buňky: {bonusArray[(int)hoverPlayCellColumn, (int)hoverPlayCellRow]}";
+        } else {
+            TbInfo.Text = "Informace jak pán";
+        }
     }
 }
