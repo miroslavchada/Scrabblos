@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -17,6 +19,9 @@ public partial class GameView : UserControl {
 
         // Set propper z-indexes
         Grid.SetZIndex(BtnNextPlayer, 2);
+
+        // Reads the dictionary from a file in resources
+        dictionary = File.ReadAllLines(Path.Combine(Directory.GetParent(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Parent.Parent.FullName, "Resources") + "\\slovnik_utf8.tsv");
 
         SetPlayers(Application.Current.Properties["Players"] as string[]);
         ScoreBoardRender(); 
@@ -73,6 +78,7 @@ public partial class GameView : UserControl {
             { new Tile('Ž', 4), 1 },
         }, "Čeština oficiální")
     };
+    private string[] dictionary;
 
     private TileBlock[,] playArray = new TileBlock[15, 15];
     private TileBlock[,] confirmedPlayArray = new TileBlock[15, 15];
@@ -294,16 +300,65 @@ public partial class GameView : UserControl {
         }
     }
 
+    private void ReturnTilesToDock(TileBlock[,] newPlayArray) {
+        foreach (TileBlock tileBlock in newPlayArray) {
+            if (tileBlock == null)
+                continue;
+
+            RemoveTileFromPlayGrid(tileBlock);
+        }
+        LoadDock(playerArray[currentPlayerIndex]);
+    }
+
     private void RoundApprove_Click(object sender, RoutedEventArgs e) {
-        // If the play is not valid - do not approve
-        //switch (ValidatePlay()) {
-        //    case 0:
-        //        break;
-        //    case 1:
-        //        return;
-        //}
         List<string> words = ValidatePlay();
-        TbInfo.Text = words.Count > 0 ? $"Slova: {string.Join(", ", words)}" : "Nevalidní tah";
+        List<string> invalidWords = new List<string>();
+        List<string> wrongPlacedWords = new List<string>();
+        string info = "";
+
+        TileBlock[,] newPlayArray = GetNewPlayArray();
+
+        if (words.Count <= 0) {
+            TbInfo.Text = "Neplatný tah";
+            return;
+        }
+
+        foreach (string word in words) {
+            if (word[0] == '-')
+                invalidWords.Add(word.Substring(1));
+
+            if (word[0] == '_') {
+                wrongPlacedWords.Add(word.Substring(1));
+            }
+        }
+
+        if (invalidWords.Count > 0 || wrongPlacedWords.Count > 0) {
+            string infoInvalid = invalidWords.Count > 0 ? $"Neplatná slova: {string.Join(", ", invalidWords)}" : "";
+            string infoWrongPlaced = wrongPlacedWords.Count > 0 ? $"Špatně položená slova: {string.Join(", ", wrongPlacedWords)}" : "";
+
+            if (invalidWords.Count > 0 && wrongPlacedWords.Count > 0)
+                info = string.Join("\r\n", new[] { infoInvalid, infoWrongPlaced });
+            else if (invalidWords.Count > 0)
+                info = infoInvalid;
+            else if (wrongPlacedWords.Count > 0)
+                info = infoWrongPlaced;
+
+            TbInfo.Text = info;
+            return;
+        }
+
+        info += $"Slova: {string.Join(", ", words)}";
+        TbInfo.Text = info;
+
+        // Disables any mouse interaction with the tiles
+        foreach (TileBlock tileBlock in newPlayArray) {
+            if (tileBlock == null)
+                continue;
+
+            tileBlock.UnsubscribeInteraction();
+        }
+
+        Array.Copy(playArray, confirmedPlayArray, playArray.Length);
 
         ControlsGrid.IsEnabled = false;
         ControlsGrid.Visibility = Visibility.Hidden;
@@ -313,6 +368,199 @@ public partial class GameView : UserControl {
         SaveDock(playerArray[currentPlayerIndex]);
         NextPlayer();
         ScoreBoardRender();
+    }
+
+    private List<string> ValidatePlay() {
+        TileBlock[,] newPlayArray = GetNewPlayArray();
+
+        List<string> words = new List<string>();
+        bool connectedToExistingWord = false;
+
+        // Check rows
+        for (int row = 0; row < 15; row++) {
+            int startColumn = -1;
+            int endColumn = -1;
+            bool continuous = false;
+            bool connected = false;
+
+            int? predictingColumn = null;
+
+            for (int column = 0; column < 15; column++) {
+                if (!continuous && newPlayArray[column, row] == null) {
+                    if (confirmedPlayArray[column, row] != null) {
+                        if (predictingColumn == null) {
+                            predictingColumn = column;
+                        }
+                    } else {
+                        predictingColumn = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startColumn = column;
+                        // Readjusts the value if the word follows an already placed letter
+                        if (predictingColumn != null) {
+                            startColumn = (int)predictingColumn;
+                            connectedToExistingWord = true;
+                            connected = true;
+                        }
+                        continuous = true;
+                    }
+
+                    // Checks if the word is placed in the middle of the board
+                    if (column == 7 && row == 7) {
+                        connectedToExistingWord = true;
+                        connected = true;
+                    }
+
+                    // Checks if the word is connected to another word on top or bottom
+                    if (confirmedPlayArray[column, row - 1] != null || confirmedPlayArray[column, row + 1] != null)
+                        connected = true;
+
+                    endColumn = column;
+                } else if (continuous && playArray[column, row] != null) {
+                    endColumn = column;
+                    connectedToExistingWord = true;
+                    connected = true;
+                } else if (continuous) {
+                    // Checking a single letter word, only here, checking all borders
+                    bool single = false;
+                    if (startColumn == endColumn) {
+                        if (playArray[column - 1, row - 1] == null && playArray[column - 1, row + 1] == null &&
+                            playArray[column - 2, row] == null && playArray[column, row] == null)
+                            single = true;
+                    }
+
+                    if (startColumn != endColumn || single) {
+                        string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                        if (!string.IsNullOrEmpty(word)) {
+                            // Marks a wrongly placed word
+                            if (!connected)
+                                word = "_" + word;
+                            // Marks a word that is not in dictionary
+                            else if (!IsInDictionary(word))
+                                word = "-" + word;
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                    connected = false;
+                }
+            }
+
+            if (continuous && startColumn != endColumn) {
+                string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                if (!string.IsNullOrEmpty(word)) {
+                    // Marks a wrongly placed word
+                    if (!connected)
+                        word = "" + word;
+                    words.Add(word);
+                }
+            }
+        }
+
+        // Check columns
+        for (int column = 0; column < 15; column++) {
+            int startRow = -1;
+            int endRow = -1;
+            bool continuous = false;
+            bool connected = false;
+
+            int? predictingRow = null;
+
+            for (int row = 0; row < 15; row++) {
+                if (!continuous && newPlayArray[column, row] == null) {
+                    if (confirmedPlayArray[column, row] != null) {
+                        if (predictingRow == null) {
+                            predictingRow = row;
+                        }
+                    } else {
+                        predictingRow = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startRow =  row;
+                        // Readjusts the value if the word follows an already placed letter
+                        if (predictingRow != null) {
+                            startRow = (int)predictingRow;
+                            connectedToExistingWord = true;
+                            connected = true;
+                        }
+                        continuous = true;
+                    }
+
+                    // Checks if the word is placed in the middle of the board
+                    if (column == 7 && row == 7) {
+                        connectedToExistingWord = true;
+                        connected = true;
+                    }
+
+                    // Checks if the word is connected to another word on left or right
+                    if (confirmedPlayArray[column - 1, row] != null || confirmedPlayArray[column + 1, row] != null)
+                        connected = true;
+
+                    endRow = row;
+                } else if (continuous && playArray[column, row] != null) {
+                    endRow = row;
+                    connectedToExistingWord = true;
+                    connected = true;
+                } else if (continuous) {
+                    if (startRow != endRow) {
+                        string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                        if (!string.IsNullOrEmpty(word)) {
+                            // Marks a wrongly placed word
+                            if (!connected)
+                                word = "_" + word;
+                            // Marks a word that is not in dictionary
+                            else if (!IsInDictionary(word))
+                                word = "-" + word;
+
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                    connected = false;
+                }
+            }
+
+            if (continuous && startRow != endRow) {
+                string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                if (!string.IsNullOrEmpty(word)) {
+                    words.Add(word);
+                }
+            }
+        }
+
+        if (!connectedToExistingWord) {
+            for (int i = 0; i < words.Count; i++) {
+                words[i] = "" + words[i];
+            }
+        }
+
+        return words;
+    }
+
+    private bool IsInDictionary(string word) {
+        return true;
+    }
+
+    private TileBlock[,] GetNewPlayArray() {
+        TileBlock[,] newPlayArray = new TileBlock[15, 15];
+
+        // Gets an array of newly placed TileBlocks by subtracting confirmedPlayArray from playArray
+        for (int column = 0; column < 15; column++) {
+            for (int row = 0; row < 15; row++) {
+                TileBlock tile = playArray[column, row];
+                if (tile != null && confirmedPlayArray[column, row] != tile) {
+                    newPlayArray[column, row] = tile;
+                }
+            }
+        }
+
+        return newPlayArray;
     }
 
     private void BtnNextPlayer_Click(object sender, RoutedEventArgs e) {
@@ -352,121 +600,6 @@ public partial class GameView : UserControl {
         }
 
         return null;
-    }
-
-    private List<string> ValidatePlay() {
-
-        TileBlock[,] newPlayArray = new TileBlock[15, 15];
-
-        // Gets new play array by subtracting confirmed play array from play array
-        for (int column = 0; column < 15; column++) {
-            for (int row = 0; row < 15; row++) {
-                TileBlock tile = playArray[column, row];
-                if (tile != null && confirmedPlayArray[column, row] != tile) {
-                    newPlayArray[column, row] = tile;
-                }
-            }
-        }
-
-        List<string> words = new List<string>();
-
-        // Check rows
-        for (int row = 0; row < 15; row++) {
-            int startColumn = -1;
-            int endColumn = -1;
-            bool continuous = false;
-
-            int? predictingColumn = null;
-
-            for (int column = 0; column < 15; column++) {
-                if (!continuous) {
-                    if (playArray[column, row] != null) {
-                        if (predictingColumn == null)
-                            predictingColumn = column;
-                    } else {
-                        predictingColumn = null;
-                    }
-                }
-
-                if (newPlayArray[column, row] != null) {
-                    if (!continuous) {
-                        startColumn = predictingColumn != null ? (int)predictingColumn : column;
-                        continuous = true;
-                    }
-                    endColumn = column;
-                }
-                else if (continuous && playArray[column, row] != null) {
-                    endColumn = column;
-                }
-                else if (continuous) {
-                    if (startColumn != endColumn) {
-                        string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
-                        if (!string.IsNullOrEmpty(word)) {
-                            words.Add(word);
-                        }
-                    }
-                    continuous = false;
-                }
-            }
-
-            if (continuous && startColumn != endColumn) {
-                string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
-                if (!string.IsNullOrEmpty(word)) {
-                    words.Add(word);
-                }
-            }
-        }
-
-        // Check columns
-        for (int column = 0; column < 15; column++) {
-            int startRow = -1;
-            int endRow = -1;
-            bool continuous = false;
-
-            int? predictingRow = null;
-
-            for (int row = 0; row < 15; row++) {
-                if (!continuous) {
-                    if (playArray[column, row] != null) {
-                        if (predictingRow == null)
-                            predictingRow = row;
-                    } else {
-                        predictingRow = null;
-                    }
-                }
-
-                if (newPlayArray[column, row] != null) {
-                    if (!continuous) {
-                        startRow = predictingRow != null ? (int)predictingRow : row;
-                        continuous = true;
-                    }
-                    endRow = row;
-                }
-                else if (continuous && playArray[column, row] != null) {
-                    endRow = row;
-                }
-                else if (continuous) {
-                    if (startRow != endRow) {
-                        string word = GetWordFromPlayArray(startRow, endRow, column, false);
-                        if (!string.IsNullOrEmpty(word)) {
-                            words.Add(word);
-                        }
-                    }
-                    continuous = false;
-                }
-            }
-
-            if (continuous && startRow != endRow) {
-                string word = GetWordFromPlayArray(startRow, endRow, column, false);
-                if (!string.IsNullOrEmpty(word)) {
-                    words.Add(word);
-                }
-            }
-        }
-
-        Array.Copy(playArray, confirmedPlayArray, playArray.Length);
-
-        return words;
     }
 
     private string GetWordFromPlayArray(int start, int end, int fixedIndex, bool isRow) {
@@ -557,7 +690,8 @@ public partial class GameView : UserControl {
         PlayGrid.Children.Remove(tileBlock);
     }
 
-    private void AddTileToDockGrid(TileBlock tileBlock, int column) {
+    private void AddTileToDockGrid(TileBlock tileBlock, int column)
+    {
         if (dockArray[column] != null)
             return;
 
