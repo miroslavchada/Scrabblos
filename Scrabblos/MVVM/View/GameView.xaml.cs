@@ -1,8 +1,11 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Image = System.Windows.Controls.Image;
 
 namespace Scrabblos.MVVM.View;
 
@@ -14,13 +17,23 @@ public partial class GameView : UserControl {
         InitializeComponent();
         Instance = this;
 
-        DockGridFill();
+        // Set propper z-indexes
+        Grid.SetZIndex(BtnNextPlayer, 2);
+
+        // Reads the dictionary from a file in resources
+        dictionary = File.ReadAllLines(Path.Combine(Directory.GetParent(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Parent.Parent.FullName, "Resources") + "\\slovnik_utf8.tsv");
+
+        SetPlayers(Application.Current.Properties["Players"] as string[]);
+        ScoreBoardRender(); 
     }
 
     public static GameView Instance { get; private set; }
 
     private bool escapeMenu;
     private int currentSetIndex = 0;
+
+    private Player[] playerArray;
+    private int currentPlayerIndex = 0;
 
     private List<TileSet> sets = new() {
         new TileSet(new Dictionary<Tile, int> {
@@ -63,12 +76,52 @@ public partial class GameView : UserControl {
             { new Tile('Ý', 4), 2 },
             { new Tile('Z', 2), 2 },
             { new Tile('Ž', 4), 1 },
-            { new Tile('_', 0), 2 }
         }, "Čeština oficiální")
     };
+    private string[] dictionary;
 
-    private TileBlock?[,] playArray = new TileBlock?[15, 15];
-    private TileBlock?[] dockArray = new TileBlock?[7];
+    private TileBlock[,] playArray = new TileBlock[15, 15];
+    private TileBlock[,] confirmedPlayArray = new TileBlock[15, 15];
+    private TileBlock[] dockArray = new TileBlock[7];
+
+    private enum BonusType {
+        None,
+        DoubleLetter,
+        TripleLetter,
+        DoubleWord,
+        TripleWord
+    }
+
+    private BonusType[,] bonusArray = new BonusType[15, 15] {
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord },
+        { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter}, 
+        { BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord },
+        { BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None },
+        { BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None },
+        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter},
+        { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
+        { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
+        { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord }
+    };
+
+    public void SetPlayers(string[] players) {
+        playerArray = new Player[players.Length];
+
+        for (int i = 0; i < players.Length; i++) {
+            // New player from name string
+            Player player = new Player(players[i]);
+            SaveDock(player);
+            playerArray[i] = player;
+        }
+
+        LoadDock(playerArray[currentPlayerIndex]);
+    }
 
     #region Tile dragging
 
@@ -180,8 +233,7 @@ public partial class GameView : UserControl {
         Panel.SetZIndex(draggable, 5);
     }
 
-    Image preview = new()
-    {
+    private Image preview = new() {
         Opacity = 0.2,
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
@@ -246,6 +298,312 @@ public partial class GameView : UserControl {
 
     #endregion Tile dragging
 
+    private void NextPlayer() {
+        currentPlayerIndex = currentPlayerIndex >= playerArray.Length - 1 ? 0 : currentPlayerIndex + 1;
+    }
+
+    private void LoadDock(Player player) {
+        // Clear grid
+        foreach (TileBlock tileBlock in dockArray) {
+            if (tileBlock == null) continue;
+            RemoveTileFromDockGrid(tileBlock);
+        }
+
+        // Restore players dock
+        for (int i = 0; i < dockArray.Length; i++) {
+            AddTileToDockGrid(player.GetDock()[i], i);
+        }
+    }
+
+    private void SaveDock(Player player) {
+        DockGridFill();
+        // Rewrite players dock
+        player.SetDock(dockArray);
+
+        // Clear grid
+        foreach (TileBlock tileBlock in dockArray) {
+            RemoveTileFromDockGrid(tileBlock);
+        }
+    }
+
+    private void RestoreDock_Click(object sender, RoutedEventArgs e) {
+        ReturnTilesToDock();
+    }
+
+    private void ReturnTilesToDock() {
+        foreach (TileBlock tileBlock in GetNewPlayArray()) {
+            if (tileBlock == null)
+                continue;
+
+            RemoveTileFromPlayGrid(tileBlock);
+        }
+        LoadDock(playerArray[currentPlayerIndex]);
+    }
+
+    private void RoundApprove_Click(object sender, RoutedEventArgs e) {
+        List<string> words = ValidatePlay();
+        List<string> invalidWords = new List<string>();
+        List<string> wrongPlacedWords = new List<string>();
+        string info = "";
+
+        TileBlock[,] newPlayArray = GetNewPlayArray();
+
+        if (words.Count <= 0) {
+            TbInfo.Text = "Neplatný tah";
+            return;
+        }
+
+        foreach (string word in words) {
+            if (word[0] == '-')
+                invalidWords.Add(word.Substring(1));
+
+            if (word[0] == '_') {
+                wrongPlacedWords.Add(word.Substring(1));
+            }
+        }
+
+        if (invalidWords.Count > 0 || wrongPlacedWords.Count > 0) {
+            string infoInvalid = invalidWords.Count > 0 ? $"Neplatná slova: {string.Join(", ", invalidWords)}" : "";
+            string infoWrongPlaced = wrongPlacedWords.Count > 0 ? $"Špatně položená slova: {string.Join(", ", wrongPlacedWords)}" : "";
+
+            if (invalidWords.Count > 0 && wrongPlacedWords.Count > 0)
+                info = string.Join("\r\n", new[] { infoInvalid, infoWrongPlaced });
+            else if (invalidWords.Count > 0)
+                info = infoInvalid;
+            else if (wrongPlacedWords.Count > 0)
+                info = infoWrongPlaced;
+
+            TbInfo.Text = info;
+            return;
+        }
+
+        info += $"Slova: {string.Join(", ", words)}";
+        TbInfo.Text = info;
+
+        // Disables any mouse interaction with the tiles
+        foreach (TileBlock tileBlock in newPlayArray) {
+            if (tileBlock == null)
+                continue;
+
+            tileBlock.UnsubscribeInteraction();
+        }
+
+        Array.Copy(playArray, confirmedPlayArray, playArray.Length);
+
+        ControlsGrid.IsEnabled = false;
+        ControlsGrid.Visibility = Visibility.Hidden;
+        BtnNextPlayer.IsEnabled = true;
+        BtnNextPlayer.Visibility = Visibility.Visible;
+
+        SaveDock(playerArray[currentPlayerIndex]);
+        NextPlayer();
+        ScoreBoardRender();
+    }
+
+    private List<string> ValidatePlay() {
+        TileBlock[,] newPlayArray = GetNewPlayArray();
+
+        List<string> words = new List<string>();
+        bool connectedToExistingWord = false;
+
+        // Check rows
+        for (int row = 0; row < 15; row++) {
+            int startColumn = -1;
+            int endColumn = -1;
+            bool continuous = false;
+            bool connected = false;
+
+            int? predictingColumn = null;
+
+            for (int column = 0; column < 15; column++) {
+                if (!continuous && newPlayArray[column, row] == null) {
+                    if (confirmedPlayArray[column, row] != null) {
+                        if (predictingColumn == null) {
+                            predictingColumn = column;
+                        }
+                    } else {
+                        predictingColumn = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startColumn = column;
+                        // Readjusts the value if the word follows an already placed letter
+                        if (predictingColumn != null) {
+                            startColumn = (int)predictingColumn;
+                            connectedToExistingWord = true;
+                            connected = true;
+                        }
+                        continuous = true;
+                    }
+
+                    // Checks if the word is placed in the middle of the board
+                    if (column == 7 && row == 7) {
+                        connectedToExistingWord = true;
+                        connected = true;
+                    }
+
+                    // Checks if the word is connected to another word on top or bottom
+                    if (confirmedPlayArray[column, row - 1] != null || confirmedPlayArray[column, row + 1] != null)
+                        connected = true;
+
+                    endColumn = column;
+                } else if (continuous && playArray[column, row] != null) {
+                    endColumn = column;
+                    connectedToExistingWord = true;
+                    connected = true;
+                } else if (continuous) {
+                    // Checking a single letter word, only here, checking all borders
+                    bool single = false;
+                    if (startColumn == endColumn) {
+                        if (playArray[column - 1, row - 1] == null && playArray[column - 1, row + 1] == null &&
+                            playArray[column - 2, row] == null && playArray[column, row] == null)
+                            single = true;
+                    }
+
+                    if (startColumn != endColumn || single) {
+                        string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                        if (!string.IsNullOrEmpty(word)) {
+                            // Marks a wrongly placed word
+                            if (!connected)
+                                word = "_" + word;
+                            // Marks a word that is not in dictionary
+                            else if (!IsInDictionary(word))
+                                word = "-" + word;
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                    connected = false;
+                }
+            }
+
+            if (continuous && startColumn != endColumn) {
+                string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
+                if (!string.IsNullOrEmpty(word)) {
+                    // Marks a wrongly placed word
+                    if (!connected)
+                        word = "" + word;
+                    words.Add(word);
+                }
+            }
+        }
+
+        // Check columns
+        for (int column = 0; column < 15; column++) {
+            int startRow = -1;
+            int endRow = -1;
+            bool continuous = false;
+            bool connected = false;
+
+            int? predictingRow = null;
+
+            for (int row = 0; row < 15; row++) {
+                if (!continuous && newPlayArray[column, row] == null) {
+                    if (confirmedPlayArray[column, row] != null) {
+                        if (predictingRow == null) {
+                            predictingRow = row;
+                        }
+                    } else {
+                        predictingRow = null;
+                    }
+                }
+
+                if (newPlayArray[column, row] != null) {
+                    if (!continuous) {
+                        startRow =  row;
+                        // Readjusts the value if the word follows an already placed letter
+                        if (predictingRow != null) {
+                            startRow = (int)predictingRow;
+                            connectedToExistingWord = true;
+                            connected = true;
+                        }
+                        continuous = true;
+                    }
+
+                    // Checks if the word is placed in the middle of the board
+                    if (column == 7 && row == 7) {
+                        connectedToExistingWord = true;
+                        connected = true;
+                    }
+
+                    // Checks if the word is connected to another word on left or right
+                    if (confirmedPlayArray[column - 1, row] != null || confirmedPlayArray[column + 1, row] != null)
+                        connected = true;
+
+                    endRow = row;
+                } else if (continuous && playArray[column, row] != null) {
+                    endRow = row;
+                    connectedToExistingWord = true;
+                    connected = true;
+                } else if (continuous) {
+                    if (startRow != endRow) {
+                        string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                        if (!string.IsNullOrEmpty(word)) {
+                            // Marks a wrongly placed word
+                            if (!connected)
+                                word = "_" + word;
+                            // Marks a word that is not in dictionary
+                            else if (!IsInDictionary(word))
+                                word = "-" + word;
+
+                            words.Add(word);
+                        }
+                    }
+                    continuous = false;
+                    connected = false;
+                }
+            }
+
+            if (continuous && startRow != endRow) {
+                string word = GetWordFromPlayArray(startRow, endRow, column, false);
+                if (!string.IsNullOrEmpty(word)) {
+                    words.Add(word);
+                }
+            }
+        }
+
+        if (!connectedToExistingWord) {
+            for (int i = 0; i < words.Count; i++) {
+                words[i] = "" + words[i];
+            }
+        }
+
+        return words;
+    }
+
+    private bool IsInDictionary(string word) {
+        return true;
+    }
+
+    private TileBlock[,] GetNewPlayArray() {
+        TileBlock[,] newPlayArray = new TileBlock[15, 15];
+
+        // Gets an array of newly placed TileBlocks by subtracting confirmedPlayArray from playArray
+        for (int column = 0; column < 15; column++) {
+            for (int row = 0; row < 15; row++) {
+                TileBlock tile = playArray[column, row];
+                if (tile != null && confirmedPlayArray[column, row] != tile) {
+                    newPlayArray[column, row] = tile;
+                }
+            }
+        }
+
+        return newPlayArray;
+    }
+
+    private void BtnNextPlayer_Click(object sender, RoutedEventArgs e) {
+        ControlsGrid.IsEnabled = true;
+        ControlsGrid.Visibility = Visibility.Visible;
+        BtnNextPlayer.IsEnabled = false;
+        BtnNextPlayer.Visibility = Visibility.Hidden;
+
+        LoadDock(playerArray[currentPlayerIndex]);
+        DockGridFill();
+        playerArray[currentPlayerIndex].SetDock(dockArray);
+    }
+
     private void DockGridFill() {
         for (int i = 0; i < dockArray.Length; i++) {
             if (dockArray[i] != null)
@@ -272,6 +630,60 @@ public partial class GameView : UserControl {
         }
 
         return null;
+    }
+
+    private string GetWordFromPlayArray(int start, int end, int fixedIndex, bool isRow) {
+        string word = "";
+
+        if (isRow) {
+            for (int column = start; column <= end; column++) {
+                TileBlock tile = playArray[column, fixedIndex];
+                if (tile != null) {
+                    word += tile.tile.character;
+                } else {
+                    return "";
+                }
+            }
+        } else {
+            for (int row = start; row <= end; row++) {
+                TileBlock tile = playArray[fixedIndex, row];
+                if (tile != null) {
+                    word += tile.tile.character;
+                } else {
+                    return "";
+                }
+            }
+        }
+
+        return word;
+    }
+
+    private void ScoreBoardRender() {
+        ScoreBoard.Children.Clear();
+
+        TextBlock title = new() {
+            Text = "Tabulka hráčů",
+            FontSize = 68,
+            FontWeight = FontWeights.SemiBold,
+            Margin = new Thickness(0, 0, 0, 20)
+        };
+        ScoreBoard.Children.Add(title);
+
+        for (int i = 0; i < playerArray.Length; i++) {
+            TextBlock player = new() {
+                Text = $"{i}) {playerArray[i].Name}: {playerArray[i].Score}",
+                FontSize = 42,
+                FontWeight = FontWeights.Normal,
+                Margin = new Thickness(0, 0, 0, 3)
+            };
+
+            if (i == currentPlayerIndex) {
+                player.FontSize = 48;
+                player.FontWeight = FontWeights.SemiBold;
+            }
+
+            ScoreBoard.Children.Add(player);
+        }
     }
 
     #region Tile manipulation
@@ -308,7 +720,8 @@ public partial class GameView : UserControl {
         PlayGrid.Children.Remove(tileBlock);
     }
 
-    private void AddTileToDockGrid(TileBlock tileBlock, int column) {
+    private void AddTileToDockGrid(TileBlock tileBlock, int column)
+    {
         if (dockArray[column] != null)
             return;
 
@@ -390,7 +803,6 @@ public partial class GameView : UserControl {
     }
 
     private void GameView_OnMouseMove(object sender, MouseEventArgs e) {
-
         // Gets cell by dividing pixels by PlayGrid column/row size
         hoverPlayCellColumn = (int)Math.Floor(e.GetPosition(PlayGrid).X / 96);
         hoverPlayCellRow = (int)Math.Floor(e.GetPosition(PlayGrid).Y / 96);
@@ -413,19 +825,9 @@ public partial class GameView : UserControl {
 
         // If in bounds of PlayGrid
         if (hoverPlayCellColumn != null && hoverPlayCellRow != null) {
-            TBlockInfo.Text = $"Buňka pro položení: {CoordsToCell((int)hoverPlayCellColumn, (int)hoverPlayCellRow)}";
-        } // If in bounds of DockGrid
-        else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
-            TBlockInfo.Text = $"Buňka pro položení: DOCK{(int)hoverDockCellColumn}";
+            TbInfo.Text = $"Typ buňky: {bonusArray[(int)hoverPlayCellColumn, (int)hoverPlayCellRow]}";
         } else {
-            TBlockInfo.Text = "Informace jak pán";
+            TbInfo.Text = "Informace jak pán";
         }
-    }
-
-    private string CoordsToCell(int columnIndex, int rowIndex)
-    {
-        char[] letters = new[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O' };
-        
-        return $"{columnIndex + 1}{letters[rowIndex]}";
     }
 }

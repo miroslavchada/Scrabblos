@@ -27,4 +27,10 @@ class TileBlock : Image
         MouseLeftButtonUp += GameView.Instance.TileBlock_MouseLeftButtonUp;
         MouseMove += GameView.Instance.TileBlock_MouseMove;
     }
+
+    public void UnsubscribeInteraction() {
+        MouseLeftButtonDown -= GameView.Instance.TileBlock_MouseLeftButtonDown;
+        MouseLeftButtonUp -= GameView.Instance.TileBlock_MouseLeftButtonUp;
+        MouseMove -= GameView.Instance.TileBlock_MouseMove;
+    }
 }

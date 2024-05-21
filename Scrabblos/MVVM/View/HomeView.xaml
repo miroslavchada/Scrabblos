@@ -21,7 +21,50 @@
                                FontSize="72"
                                TextAlignment="Center"/>
 
-                    <Button Content="Hra"
+                    <StackPanel Margin="0 64"
+                                Orientation="Horizontal">
+                        <StackPanel Margin="16 0">
+                            <TextBlock Text="Hráč 1" Name="Player1Label"
+                                       FontSize="48"
+                                       TextAlignment="Center"/>
+                            <TextBox Text="{Binding Player1Name}" Name="Player1TextBox"
+                                     TextChanged="PlayerTextBox_OnTextChanged"
+                                     FontSize="48"
+                                     Width="400"
+                                     TextAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Margin="16 0">
+                            <TextBlock Text="Hráč 2" Name="Player2Label"
+                                       FontSize="48" Foreground="DarkGray"
+                                       TextAlignment="Center"/>
+                            <TextBox Text="{Binding Player1Name}" Name="Player2TextBox"
+                                     TextChanged="PlayerTextBox_OnTextChanged"
+                                     IsEnabled="False"
+                                     FontSize="48" Width="400" TextAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Margin="16 0">
+                            <TextBlock Text="Hráč 3" Name="Player3Label"
+                                       FontSize="48" Foreground="DarkGray"
+                                       TextAlignment="Center"/>
+                            <TextBox Text="{Binding Player1Name}" Name="Player3TextBox"
+                                     TextChanged="PlayerTextBox_OnTextChanged"
+                                     IsEnabled="False"
+                                     FontSize="48" Width="400" TextAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Margin="16 0">
+                            <TextBlock Text="Hráč 4" Name="Player4Label"
+                                       FontSize="48" Foreground="DarkGray"
+                                       TextAlignment="Center"/>
+                            <TextBox Text="{Binding Player1Name}" Name="Player4TextBox"
+                                     TextChanged="PlayerTextBox_OnTextChanged"
+                                     IsEnabled="False"
+                                     FontSize="48" Width="400" TextAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Button Content="Hra" Name="StartGame"
+                            Click="StartGame_OnClick"
+                            IsEnabled="False"
                             Command="{Binding NavigateToGameCommand}"
                             Height="100" Width="400"
                             FontSize="48"
@@ -29,7 +72,6 @@
 
                     <Button Content="Vypnout" Name="CloseApp"
                             Click="CloseApp_OnClick"
-                            Command="{Binding NavigateToGameCommand}"
                             Height="100" Width="400"
                             FontSize="48"
                             Margin=" 0 36 0 0 "/>
