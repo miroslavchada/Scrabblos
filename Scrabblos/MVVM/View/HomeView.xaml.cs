@@ -43,7 +43,7 @@ public partial class HomeView : UserControl {
             }
         }
 
-        // Allows player to start the game if at least one name is filled
+        // Allows player to start the game if at least one Name is filled
         players.Clear();
         bool atLeastOneFilled = false;
         foreach (TextBox tb in playerTB) {

@@ -7,13 +7,13 @@ namespace Scrabblos;
 
 class TileBlock : Image
 {
-    public Tile tile { get; private set; }
+    public Tile Tile { get; private set; }
 
-    private float _scale = .92f;
+    private readonly float _scale = .92f;
 
     public TileBlock(Tile tile, string resourceName)
     {
-        this.tile = tile;
+        Tile = tile;
         BitmapImage image = new BitmapImage(new Uri($"pack://application:,,,/Scrabblos;component/Resources/{resourceName}"));
         Source = image;
         Height = 96 * _scale;

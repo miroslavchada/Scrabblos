@@ -71,64 +71,21 @@ namespace Scrabblos.Properties {
         }
         
         /// <summary>
-        ///   Vyhledá lokalizovaný řetězec podobný A	11835863
-        ///Á	4310
-        ///À	211
-        ///Ą	105
-        ///AA	545
-        ///AAA	564
-        ///AALTONEN	218
-        ///AARON	991
-        ///AARONA	164
-        ///AARONE	188
-        ///AB	1613
-        ///ABALKIN	118
-        ///ABB	791
-        ///ABBA	264
-        ///ABBÁS	161
-        ///ABBEY	248
-        ///ABBOTT	172
-        ///ABBY	133
-        ///ABC	2015
-        ///ABDIKACI	234
-        ///ABDUL	126
-        ///ABE	334
-        ///ABECEDU	226
-        ///ABECEDY	1002
-        ///ABEL	132
-        ///ÁBEL	417
-        ///ABELARD	108
-        ///ÁBER	133
-        ///ABF	443
-        ///ABCHÁZIE	133
-        ///ABCHÁZII	145
-        ///ABIE	110
-        ///ABIGAIL	389
-        ///ABL	275
-        ///ABN	289
-        ///ABNORMÁLNĚ	107
-        ///ABNORMÁLNÍ	414
-        ///ABONENTNÍ	104
-        ///ABRAHAM	1463
-        ///ABRAHÁM	333
-        ///ABRAHAMA	415
-        ///ABRAM	515
-        ///ABRAMOVIČ	118
-        ///ABS	798
-        ///ABSENCE	4140 [zbytek řetězce byl zkrácen];.
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
         /// </summary>
-        internal static string dict {
+        internal static byte[] mirek {
             get {
-                return ResourceManager.GetString("dict", resourceCulture);
+                object obj = ResourceManager.GetObject("mirek", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
         /// </summary>
-        internal static byte[] mirek {
+        internal static byte[] slovnik_utf8 {
             get {
-                object obj = ResourceManager.GetObject("mirek", resourceCulture);
+                object obj = ResourceManager.GetObject("slovnik_utf8", resourceCulture);
                 return ((byte[])(obj));
             }
         }
