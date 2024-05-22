@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Image = System.Windows.Controls.Image;
 
 namespace Scrabblos.MVVM.View;
@@ -21,7 +20,7 @@ public partial class GameView : UserControl {
         Grid.SetZIndex(BtnNextPlayer, 2);
 
         // Reads the dictionary from a file in resources
-        dictionary = File.ReadAllLines(Path.Combine(Directory.GetParent(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Parent.Parent.FullName, "Resources") + "\\slovnik_utf8.tsv");
+        SetDictionary(Path.Combine(Directory.GetParent(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Parent.Parent.FullName, "Resources") + "\\slovnik_utf8.tsv");
 
         SetPlayers(Application.Current.Properties["Players"] as string[]);
         ScoreBoardRender(); 
@@ -36,49 +35,79 @@ public partial class GameView : UserControl {
     private int currentPlayerIndex = 0;
 
     private List<TileSet> sets = new() {
-        new TileSet(new Dictionary<Tile, int> {
-            { new Tile('A', 1), 5 },
-            { new Tile('Á', 2), 2 },
-            { new Tile('B', 3), 2 },
-            { new Tile('C', 2), 3 },
-            { new Tile('Č', 4), 1 },
-            { new Tile('D', 1), 3 },
-            { new Tile('Ď', 8), 1 },
-            { new Tile('E', 1), 5 },
-            { new Tile('É', 3), 2 },
-            { new Tile('Ě', 3), 2 },
-            { new Tile('F', 5), 1 },
-            { new Tile('G', 5), 1 },
-            { new Tile('H', 2), 3 },
-            { new Tile('I', 1), 4 },
-            { new Tile('Í', 2), 3 },
-            { new Tile('J', 2), 2 },
-            { new Tile('K', 1), 3 },
-            { new Tile('L', 1), 3 },
-            { new Tile('M', 2), 3 },
-            { new Tile('N', 1), 5 },
-            { new Tile('Ň', 6), 1 },
-            { new Tile('O', 1), 6 },
-            { new Tile('Ó', 7), 1 },
-            { new Tile('P', 1), 3 },
-            { new Tile('R', 1), 3 },
-            { new Tile('Ř', 4), 2 },
-            { new Tile('S', 1), 4 },
-            { new Tile('Š', 4), 2 },
-            { new Tile('T', 1), 4 },
-            { new Tile('Ť', 7), 1 },
-            { new Tile('U', 2), 3 },
-            { new Tile('Ú', 5), 1 },
-            { new Tile('Ů', 4), 1 },
-            { new Tile('V', 1), 4 },
-            { new Tile('X', 10), 1 },
-            { new Tile('Y', 2), 2 },
-            { new Tile('Ý', 4), 2 },
-            { new Tile('Z', 2), 2 },
-            { new Tile('Ž', 4), 1 },
+        new TileSet(new List<(Tile, int)> {
+            ( new Tile('A', 1), 5 ),
+            ( new Tile('Á', 2), 2 ),
+            ( new Tile('B', 3), 2 ),
+            ( new Tile('C', 2), 3 ),
+            ( new Tile('Č', 4), 1 ),
+            ( new Tile('D', 1), 3 ),
+            ( new Tile('Ď', 8), 1 ),
+            ( new Tile('E', 1), 5 ),
+            ( new Tile('É', 3), 2 ),
+            ( new Tile('Ě', 3), 2 ),
+            ( new Tile('F', 5), 1 ),
+            ( new Tile('G', 5), 1 ),
+            ( new Tile('H', 2), 3 ),
+            ( new Tile('I', 1), 4 ),
+            ( new Tile('Í', 2), 3 ),
+            ( new Tile('J', 2), 2 ),
+            ( new Tile('K', 1), 3 ),
+            ( new Tile('L', 1), 3 ),
+            ( new Tile('M', 2), 3 ),
+            ( new Tile('N', 1), 5 ),
+            ( new Tile('Ň', 6), 1 ),
+            ( new Tile('O', 1), 6 ),
+            ( new Tile('Ó', 7), 1 ),
+            ( new Tile('P', 1), 3 ),
+            ( new Tile('R', 1), 3 ),
+            ( new Tile('Ř', 4), 2 ),
+            ( new Tile('S', 1), 4 ),
+            ( new Tile('Š', 4), 2 ),
+            ( new Tile('T', 1), 4 ),
+            ( new Tile('Ť', 7), 1 ),
+            ( new Tile('U', 2), 3 ),
+            ( new Tile('Ú', 5), 1 ),
+            ( new Tile('Ů', 4), 1 ),
+            ( new Tile('V', 1), 4 ),
+            ( new Tile('X', 10), 1 ),
+            ( new Tile('Y', 2), 2 ),
+            ( new Tile('Ý', 4), 2 ),
+            ( new Tile('Z', 2), 2 ),
+            ( new Tile('Ž', 4), 1 )
         }, "Čeština oficiální")
     };
-    private string[] dictionary;
+
+    private List<(string, int)> dictionary = new();
+    private char[][] charPriority = {
+        new [] { 'A', 'Á' },
+        new [] { 'B' },
+        new [] { 'C', 'Č' },
+        new [] { 'D', 'Ď' },
+        new [] { 'E', 'É', 'Ě' },
+        new [] { 'F' },
+        new [] { 'G' },
+        new [] { 'H' },
+        new [] { 'I', 'Í' },
+        new [] { 'J' },
+        new [] { 'K' },
+        new [] { 'L' },
+        new [] { 'M' },
+        new [] { 'N', 'Ň' },
+        new [] { 'O', 'Ó' },
+        new [] { 'P' },
+        new [] { 'R', 'Ř' },
+        new [] { 'S', 'Š' },
+        new [] { 'T', 'Ť' },
+        new [] { 'U', 'Ú', 'Ů' },
+        new [] { 'V' },
+        new [] { 'X' },
+        new [] { 'Y', 'Ý' },
+        new [] { 'Z', 'Ž' }
+    };
+    private char[] allowedChars = new[] {
+        'A', 'Á', 'B', 'C', 'Č', 'D', 'Ď', 'E', 'É', 'Ě', 'F', 'G', 'H', 'I', 'Í', 'J', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ó', 'P', 'R', 'Ř', 'S', 'Š', 'T', 'Ť', 'U', 'Ú', 'Ů', 'V', 'X', 'Y', 'Ý', 'Z', 'Ž'
+    };
 
     private TileBlock[,] playArray = new TileBlock[15, 15];
     private TileBlock[,] confirmedPlayArray = new TileBlock[15, 15];
@@ -110,7 +139,7 @@ public partial class GameView : UserControl {
         { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord }
     };
 
-    public void SetPlayers(string[] players) {
+    private void SetPlayers(string[] players) {
         playerArray = new Player[players.Length];
 
         for (int i = 0; i < players.Length; i++) {
@@ -121,6 +150,26 @@ public partial class GameView : UserControl {
         }
 
         LoadDock(playerArray[currentPlayerIndex]);
+    }
+
+    private void SetDictionary(string filePath) {
+        using (StreamReader sr = new(filePath)) {
+            string line;
+            while ((line = sr.ReadLine()) != null) {
+                string[] parts = line.Split('\t');
+                bool isValid = true;
+                foreach (char allowedChar in allowedChars) {
+                    if (!parts[0].Contains(allowedChar)) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    dictionary.Add((parts[0], Convert.ToInt32(parts[1])));
+                }
+            }
+        }
     }
 
     #region Tile dragging
@@ -409,7 +458,6 @@ public partial class GameView : UserControl {
 
         List<(string, int)> wordsWithScore = new();
         int wordScoreMultiplier = 1;
-        bool connectedToExistingWord = false;
 
         // Check rows
         for (int row = 0; row < 15; row++) {
@@ -447,37 +495,41 @@ public partial class GameView : UserControl {
                             predictedColumn = null;
                             possibleScore += predictedScore;
                             predictedScore = 0;
-                            connectedToExistingWord = true;
                             connected = true;
                         }
                         continuous = true;
                     }
 
                     // Checks if the word is placed in the middle of the board
-                    if (column == 7 && row == 7) {
-                        connectedToExistingWord = true;
+                    if (column == 7 && row == 7)
                         connected = true;
-                    }
 
                     // Checks if the word is connected to another word on top or bottom
-                    if (confirmedPlayArray[column, row - 1] != null || confirmedPlayArray[column, row + 1] != null)
-                        connected = true;
+                    if (row == 0) {
+                        if (confirmedPlayArray[column, row + 1] != null)
+                            connected = true;
+                    }
+                    else if (row == 15) {
+                        if (confirmedPlayArray[column, row - 1] != null)
+                            connected = true;
+                    }
+                    else {
+                        if (confirmedPlayArray[column, row - 1] != null || confirmedPlayArray[column, row + 1] != null)
+                            connected = true;
+                    }
 
                     endColumn = column;
                     possibleScore += GetLetterScore(column, row, true);
+                    wordScoreMultiplier *= GetWordBonus(column, row);
                 } else if (continuous && playArray[column, row] != null) {
                     endColumn = column;
                     possibleScore += GetLetterScore(column, row, false);
-                    connectedToExistingWord = true;
                     connected = true;
                 } else if (continuous) {
                     // Checking a single letter word, only here, checking all borders
                     bool single = false;
-                    if (startColumn == endColumn) {
-                        if (playArray[column - 1, row - 1] == null && playArray[column - 1, row + 1] == null &&
-                            playArray[column - 2, row] == null && playArray[column, row] == null)
-                            single = true;
-                    }
+                    if (startColumn == endColumn)
+                        single = IsSingle(startColumn, row);
 
                     if (startColumn != endColumn || single) {
                         string word = GetWordFromPlayArray(startColumn, endColumn, row, true);
@@ -551,28 +603,35 @@ public partial class GameView : UserControl {
                             predictedRow = null;
                             possibleScore += predictedScore;
                             predictedScore = 0;
-                            connectedToExistingWord = true;
                             connected = true;
                         }
                         continuous = true;
                     }
 
                     // Checks if the word is placed in the middle of the board
-                    if (column == 7 && row == 7) {
-                        connectedToExistingWord = true;
+                    if (column == 7 && row == 7)
                         connected = true;
-                    }
 
                     // Checks if the word is connected to another word on left or right
-                    if (confirmedPlayArray[column - 1, row] != null || confirmedPlayArray[column + 1, row] != null)
-                        connected = true;
+                    if (column == 0) {
+                        if (confirmedPlayArray[column + 1, row] != null)
+                            connected = true;
+                    }
+                    else if (column == 15) {
+                        if (confirmedPlayArray[column - 1, row] != null)
+                            connected = true;
+                    } 
+                    else {
+                        if (confirmedPlayArray[column - 1, row] != null || confirmedPlayArray[column + 1, row] != null)
+                            connected = true;
+                    }
 
                     endRow = row;
                     possibleScore += GetLetterScore(column, row, true);
+                    wordScoreMultiplier *= GetWordBonus(column, row);
                 } else if (continuous && playArray[column, row] != null) {
                     endRow = row;
                     possibleScore += GetLetterScore(column, row, false);
-                    connectedToExistingWord = true;
                     connected = true;
                 } else if (continuous) {
                     if (startRow != endRow) {
@@ -611,13 +670,16 @@ public partial class GameView : UserControl {
             }
         }
 
-        //if (!connectedToExistingWord) {
-        //    for (int i = 0; i < wordsWithScore.Count; i++) {
-        //        wordsWithScore[i] = "" + wordsWithScore[i];
-        //    }
-        //}
-
         return wordsWithScore;
+    }
+
+    private bool IsSingle(int column, int row) {
+        bool top = row == 0 || playArray[column, row - 1] == null;
+        bool bottom = row == 15 || playArray[column, row + 1] == null;
+        bool left = column == 0 || playArray[column - 1, row] == null;
+        bool right = column == 15 || playArray[column + 1, row] == null;
+
+        return top && bottom && left && right;
     }
 
     private bool IsInDictionary(string word) {

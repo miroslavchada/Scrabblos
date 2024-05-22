@@ -7,15 +7,14 @@ class TileSet {
     public Tile[] TileArray { private set; get; } // Array of tiles
     public bool[] UsedArray { private set; get; } // Array about availability of tiles
 
-    public TileSet(Dictionary<Tile, int> tiles, string name = "") {
+    public TileSet(List<(Tile, int)> tiles, string name = "") {
         Name = name;
 
         List<Tile> tilesTemp = new();
         List<bool> usedTemp = new();
-        foreach (var tileBundle in tiles) {
-            for (int i = 0; i < tileBundle.Value - 1; i++) {
-                tileBundle.Key.Index = i;
-                tilesTemp.Add(tileBundle.Key);
+        foreach (var (tile, count) in tiles) {
+            for (int i = 0; i < count - 1; i++) {
+                tilesTemp.Add(tile);
                 usedTemp.Add(false);
             }
         }
