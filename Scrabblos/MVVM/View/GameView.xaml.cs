@@ -79,6 +79,7 @@ public partial class GameView : UserControl {
     };
 
     private List<(string, int)> dictionary = new();
+    private List<string> dictionaryJustWords = new();
     private char[][] charPriority = {
         new [] { 'A', 'Á' },
         new [] { 'B' },
@@ -105,6 +106,77 @@ public partial class GameView : UserControl {
         new [] { 'Y', 'Ý' },
         new [] { 'Z', 'Ž' }
     };
+    private int GetCharPriority(char letter) {
+        switch (letter)
+        {
+            case 'A':
+            case 'Á':
+                return 0;
+            case 'B':
+                return 1;
+            case 'C':
+            case 'Č':
+                return 2;
+            case 'D':
+            case 'Ď':
+                return 3;
+            case 'E':
+            case 'É':
+            case 'Ě':
+                return 4;
+            case 'F':
+                return 5;
+            case 'G':
+                return 6;
+            case 'H':
+                return 7;
+            case 'I':
+            case 'Í':
+                return 8;
+            case 'J':
+                return 9;
+            case 'K':
+                return 10;
+            case 'L':
+                return 11;
+            case 'M':
+                return 12;
+            case 'N':
+            case 'Ň':
+                return 13;
+            case 'O':
+            case 'Ó':
+                return 14;
+            case 'P':
+                return 15;
+            case 'R':
+            case 'Ř':
+                return 16;
+            case 'S':
+            case 'Š':
+                return 17;
+            case 'T':
+            case 'Ť':
+                return 18;
+            case 'U':
+            case 'Ú':
+            case 'Ů':
+                return 19;
+            case 'V':
+                return 20;
+            case 'X':
+                return 21;
+            case 'Y':
+            case 'Ý':
+                return 22;
+            case 'Z':
+            case 'Ž':
+                return 23;
+
+            default:
+                return -1;
+        }
+    }
     private char[] allowedChars = new[] {
         'A', 'Á', 'B', 'C', 'Č', 'D', 'Ď', 'E', 'É', 'Ě', 'F', 'G', 'H', 'I', 'Í', 'J', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ó', 'P', 'R', 'Ř', 'S', 'Š', 'T', 'Ť', 'U', 'Ú', 'Ů', 'V', 'X', 'Y', 'Ý', 'Z', 'Ž'
     };
@@ -157,16 +229,17 @@ public partial class GameView : UserControl {
             string line;
             while ((line = sr.ReadLine()) != null) {
                 string[] parts = line.Split('\t');
-                bool isValid = true;
+                bool isValid = false;
                 foreach (char allowedChar in allowedChars) {
-                    if (!parts[0].Contains(allowedChar)) {
-                        isValid = false;
+                    if (parts[0].Contains(allowedChar)) {
+                        isValid = true;
                         break;
                     }
                 }
 
                 if (isValid) {
                     dictionary.Add((parts[0], Convert.ToInt32(parts[1])));
+                    dictionaryJustWords.Add(parts[0]);
                 }
             }
         }
@@ -178,13 +251,16 @@ public partial class GameView : UserControl {
     private Point clickPosition;
     private TranslateTransform originTT;
 
+    private bool tileMoved;
+
     private bool previewActive;
 
     private int? hoverPlayCellColumn, hoverDockCellColumn;
     private int? hoverPlayCellRow, hoverDockCellRow;
 
     public void TileBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-        var draggableControl = sender as Image;
+        tileMoved = false;
+        var draggableControl = sender as TileBlock;
         originTT = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
         isDragging = true;
         clickPosition = e.GetPosition(this);
@@ -208,9 +284,10 @@ public partial class GameView : UserControl {
     }
 
     public void TileBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-
         isDragging = false;
-        var draggable = sender as Image;
+        var draggable = sender as TileBlock;
+        Grid? draggableParent = draggable.Parent as Grid;
+
         var transform = draggable.RenderTransform as TranslateTransform ?? new TranslateTransform();
 
         // Snap to grid if placed correctly
@@ -231,26 +308,32 @@ public partial class GameView : UserControl {
             }
 
             // Transition from DockGrid to PlayGrid
-            Grid draggableParent = draggable.Parent as Grid;
             if (draggableParent != PlayGrid) {
-                RemoveTileFromDockGrid(draggable as TileBlock);
-                AddTileToPlayGrid(draggable as TileBlock, gameCellColumn, gameCellRow);
+                RemoveTileFromDockGrid(draggable);
+                AddTileToPlayGrid(draggable, gameCellColumn, gameCellRow);
             }
             // Move in PlayGrid if already in PlayGrid
             else {
-                MoveTileInPlayGrid(draggable as TileBlock, gameCellColumn, gameCellRow);
+                MoveTileInPlayGrid(draggable, gameCellColumn, gameCellRow);
             }
         } // DockGrid
         else if (hoverDockCellColumn != null && hoverDockCellRow != null) {
+            // If mouse did not move, toggle the TileBlocks MarkedForExchange status
+            if (!tileMoved) {
+                draggable.ToggleExchangeMark();
+                draggable.ReleaseMouseCapture();
+                tileMoved = true;
+                return;
+            }
+
             // int? to int (can't be null anymore)
-            Grid draggableParent = draggable.Parent as Grid;
             int dockCellColumn = (int)hoverDockCellColumn;
 
             // If there is already a Tile in the cell
             if (dockArray[dockCellColumn] != null) {
                 // Swap tiles if dragged from DockGrid
                 if (draggableParent == DockGrid) {
-                    SwapTilesInDockGrid(draggable as TileBlock, dockArray[dockCellColumn]);
+                    SwapTilesInDockGrid(draggable, dockArray[dockCellColumn]);
                 }
                 // Snap back if not placed in dock grid
                 else {
@@ -264,16 +347,17 @@ public partial class GameView : UserControl {
 
             // Transition from PlayGrid to DockGrid
             if (draggableParent != DockGrid) {
-                RemoveTileFromPlayGrid(draggable as TileBlock);
-                AddTileToDockGrid(draggable as TileBlock, dockCellColumn);
+                RemoveTileFromPlayGrid(draggable);
+                AddTileToDockGrid(draggable, dockCellColumn);
             }
             // Move in DockGrid if already in DockGrid
             else {
-                MoveTileInDockGrid(draggable as TileBlock, dockCellColumn);
+                MoveTileInDockGrid(draggable, dockCellColumn);
             }
         }
 
         DisablePreview();
+        draggable.CancelExchangeMark();
 
         // Reset position in cell
         transform.X = 0;
@@ -298,6 +382,7 @@ public partial class GameView : UserControl {
     }
 
     public void TileBlock_MouseMove(object sender, MouseEventArgs e) {
+        tileMoved = true;
         var draggableControl = sender as Image;
         if (isDragging && draggableControl != null) {
             Point currentPosition = e.GetPosition(this);
@@ -366,6 +451,11 @@ public partial class GameView : UserControl {
 
     private void SaveDock(Player player) {
         DockGridFill();
+
+        foreach (TileBlock tileBlock in dockArray) {
+            tileBlock.CancelExchangeMark();
+        }
+
         // Rewrite players dock
         player.SetDock(dockArray);
 
@@ -391,6 +481,7 @@ public partial class GameView : UserControl {
 
     private void RoundApprove_Click(object sender, RoutedEventArgs e) {
         List<(string, int)> wordsWithScore = ValidatePlay();
+
         List<string> invalidWords = new();
         List<string> wrongPlacedWords = new();
         int score = 0;
@@ -399,38 +490,53 @@ public partial class GameView : UserControl {
 
         TileBlock[,] newPlayArray = GetNewPlayArray();
 
+        // Exchanging TileBlocks or passing round
         if (wordsWithScore.Count <= 0) {
-            TbInfo.Text = "Neplatný tah";
-            return;
-        }
-
-        foreach (var (word, wordScore) in wordsWithScore) {
-            if (word[0] == '-')
-                invalidWords.Add(word.Substring(1));
-
-            if (word[0] == '_') {
-                wrongPlacedWords.Add(word.Substring(1));
+            List<char> exchangedTileBlocks = new();
+            for (int i = 0; i < dockArray.Length; i++) {
+                if (dockArray[i].MarkedForExchange) {
+                    exchangedTileBlocks.Add(dockArray[i].Tile.Character);
+                    RemoveTileFromDockGrid(dockArray[i]);
+                    DockGridFill();
+                }
             }
+
+            info = exchangedTileBlocks.Count > 0 ? $"Vyměněná písmena: {string.Join(", ", exchangedTileBlocks)}" : "Tah přeskočen";
         }
+        else {
+            foreach (var (word, wordScore) in wordsWithScore) {
+                if (word[0] == '-')
+                    invalidWords.Add(word.Substring(1));
 
-        // If there are any invalid or wrongly placed words
-        if (invalidWords.Count > 0 || wrongPlacedWords.Count > 0) {
-            string infoInvalid = invalidWords.Count > 0 ? $"Neplatná slova: {string.Join(", ", invalidWords)}" : "";
-            string infoWrongPlaced = wrongPlacedWords.Count > 0 ? $"Špatně položená slova: {string.Join(", ", wrongPlacedWords)}" : "";
+                if (word[0] == '_') {
+                    wrongPlacedWords.Add(word.Substring(1));
+                }
+            }
 
-            // Report to info bar
-            if (invalidWords.Count > 0 && wrongPlacedWords.Count > 0)
-                info = string.Join("\r\n", new[] { infoInvalid, infoWrongPlaced });
-            else if (invalidWords.Count > 0)
-                info = infoInvalid;
-            else if (wrongPlacedWords.Count > 0)
-                info = infoWrongPlaced;
+            // If there are any invalid or wrongly placed words
+            if (invalidWords.Count > 0 || wrongPlacedWords.Count > 0) {
+                string infoInvalid = invalidWords.Count > 0 ? $"Neplatná slova: {string.Join(", ", invalidWords)}" : "";
+                string infoWrongPlaced = wrongPlacedWords.Count > 0 ? $"Špatně položená slova: {string.Join(", ", wrongPlacedWords)}" : "";
 
-            TbInfo.Text = info;
-            return;
+                // Report to info bar
+                if (invalidWords.Count > 0 && wrongPlacedWords.Count > 0)
+                    info = string.Join("\r\n", new[] { infoInvalid, infoWrongPlaced });
+                else if (invalidWords.Count > 0)
+                    info = infoInvalid;
+                else if (wrongPlacedWords.Count > 0)
+                    info = infoWrongPlaced;
+
+                TbInfo.Text = info;
+                return;
+            }
+
+            // Add all gained score and add to player
+            foreach (var (word, wordScore) in wordsWithScore) {
+                playerArray[currentPlayerIndex].Score += wordScore;
+            }
+
+            info += $"Slova: {string.Join(", ", wordsWithScore)}";
         }
-
-        info += $"Slova: {string.Join(", ", wordsWithScore)}";
         TbInfo.Text = info;
 
         // Disables any mouse interaction with the tiles
@@ -682,8 +788,8 @@ public partial class GameView : UserControl {
         return top && bottom && left && right;
     }
 
-    private bool IsInDictionary(string word) {
-        return true;
+    private bool IsInDictionary(string wordToFind) {
+        return dictionaryJustWords.Contains(wordToFind);
     }
 
     private int GetLetterScore(int column, int row, bool withBonus) {
