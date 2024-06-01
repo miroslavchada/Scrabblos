@@ -16,12 +16,12 @@ public partial class MainWindow : Window {
 
     public Action<Key> OnAnyKeyDown;
 
-    private bool fullscreen = true;
+    private bool _fullscreen = true;
 
     private void MainWindow_OnKeyDown(object sender, KeyEventArgs e) {
         switch (e.Key) {
             case Key.F11:
-                if (fullscreen) {
+                if (_fullscreen) {
                     WindowStyle = WindowStyle.SingleBorderWindow;
                     WindowState = WindowState.Normal;
                     ResizeMode = ResizeMode.CanResize;
@@ -30,7 +30,7 @@ public partial class MainWindow : Window {
                     WindowState = WindowState.Maximized;
                     ResizeMode = ResizeMode.NoResize;
                 }
-                fullscreen = !fullscreen;
+                _fullscreen = !_fullscreen;
                 break;
             default:
                 OnAnyKeyDown?.Invoke(e.Key);
