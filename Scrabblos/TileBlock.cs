@@ -1,20 +1,18 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
+﻿using Scrabblos.MVVM.View;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
-using Scrabblos.MVVM.View;
 
 namespace Scrabblos;
 
-class TileBlock : Image
-{
+internal class TileBlock : Image {
     public Tile Tile { get; private set; }
 
     private readonly float _scale = .92f;
 
     public bool MarkedForExchange { get; private set; }
+    public int TileSetIndex { get; set; }
 
-    public TileBlock(Tile tile, string resourceName)
-    {
+    public TileBlock(Tile tile, int tileSetIndex, string resourceName) {
         Tile = tile;
         BitmapImage image = new BitmapImage(new Uri($"pack://application:,,,/Scrabblos;component/Resources/{resourceName}"));
         Source = image;
@@ -22,6 +20,7 @@ class TileBlock : Image
         Width = 96 * _scale;
         Margin = new System.Windows.Thickness(0);
         MarkedForExchange = false;
+        TileSetIndex = tileSetIndex;
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
         VerticalAlignment = System.Windows.VerticalAlignment.Center;

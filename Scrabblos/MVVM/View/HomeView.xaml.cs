@@ -12,7 +12,7 @@ public partial class HomeView : UserControl {
         InitializeComponent();
     }
 
-    private List<string> _players = new();
+    private readonly List<string> _players = new();
 
     private void StartGame_OnClick(object sender, RoutedEventArgs e) {
         Application.Current.Properties["Players"] = _players.ToArray();

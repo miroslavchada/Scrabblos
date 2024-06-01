@@ -23,18 +23,18 @@ public partial class GameView : UserControl {
         SetDictionary(Path.Combine(Directory.GetParent(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Parent.Parent.FullName, "Resources") + "\\slovnik_utf8.tsv");
 
         SetPlayers(Application.Current.Properties["Players"] as string[]);
-        ScoreBoardRender(); 
+        ScoreBoardRender();
     }
 
     public static GameView Instance { get; private set; }
 
     private bool _escapeMenu;
-    private int _currentSetIndex = 0;
+    private readonly int _currentSetIndex = 0;
 
     private Player[] _playerArray;
     private int _currentPlayerIndex = 0;
 
-    private List<TileSet> _sets = new() {
+    private readonly List<TileSet> _sets = new() {
         new TileSet(new List<(Tile, int)> {
             ( new Tile('A', 1), 5 ),
             ( new Tile('Á', 2), 2 ),
@@ -78,15 +78,15 @@ public partial class GameView : UserControl {
         }, "Čeština oficiální")
     };
 
-    private List<(string, int)> _dictionary = new();
-    private List<string> _dictionaryJustWords = new();
-    private char[] _allowedChars = new[] {
+    private readonly HashSet<(string, int)> _dictionary = new();
+    private readonly HashSet<string> _dictionaryJustWords = new();
+    private readonly char[] _allowedChars = {
         'A', 'Á', 'B', 'C', 'Č', 'D', 'Ď', 'E', 'É', 'Ě', 'F', 'G', 'H', 'I', 'Í', 'J', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ó', 'P', 'R', 'Ř', 'S', 'Š', 'T', 'Ť', 'U', 'Ú', 'Ů', 'V', 'X', 'Y', 'Ý', 'Z', 'Ž'
     };
 
-    private TileBlock[,] _playArray = new TileBlock[15, 15];
-    private TileBlock[,] _confirmedPlayArray = new TileBlock[15, 15];
-    private TileBlock[] _dockArray = new TileBlock[7];
+    private readonly TileBlock[,] _playArray = new TileBlock[15, 15];
+    private readonly TileBlock[,] _confirmedPlayArray = new TileBlock[15, 15];
+    private readonly TileBlock[] _dockArray = new TileBlock[7];
 
     private enum BonusType {
         None,
@@ -96,11 +96,11 @@ public partial class GameView : UserControl {
         TripleWord
     }
 
-    private BonusType[,] _bonusArray = new BonusType[15, 15] {
+    private readonly BonusType[,] _bonusArray = new BonusType[15, 15] {
         { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord },
         { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
         { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
-        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter}, 
+        { BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter},
         { BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.None },
         { BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None },
         { BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None },
@@ -128,22 +128,21 @@ public partial class GameView : UserControl {
     }
 
     private void SetDictionary(string filePath) {
-        using (StreamReader sr = new(filePath)) {
-            string line;
-            while ((line = sr.ReadLine()) != null) {
-                string[] parts = line.Split('\t');
-                bool isValid = false;
-                foreach (char allowedChar in _allowedChars) {
-                    if (parts[0].Contains(allowedChar)) {
-                        isValid = true;
-                        break;
-                    }
+        using StreamReader sr = new(filePath);
+        string line;
+        while ((line = sr.ReadLine()) != null) {
+            string[] parts = line.Split('\t');
+            bool isValid = false;
+            foreach (char allowedChar in _allowedChars) {
+                if (parts[0].Contains(allowedChar)) {
+                    isValid = true;
+                    break;
                 }
+            }
 
-                if (isValid) {
-                    _dictionary.Add((parts[0], Convert.ToInt32(parts[1])));
-                    _dictionaryJustWords.Add(parts[0]);
-                }
+            if (isValid) {
+                _ = _dictionary.Add((parts[0], Convert.ToInt32(parts[1])));
+                _ = _dictionaryJustWords.Add(parts[0]);
             }
         }
     }
@@ -167,7 +166,7 @@ public partial class GameView : UserControl {
         _originTT = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
         IsDragging = true;
         _clickPosition = e.GetPosition(this);
-        draggableControl.CaptureMouse();
+        _ = draggableControl.CaptureMouse();
 
         // From which grid the Tile is dragged is in the foreground
         Grid draggableParent = draggableControl.Parent as Grid;
@@ -195,8 +194,7 @@ public partial class GameView : UserControl {
 
         // Snap to grid if placed correctly
         // PlayGrid
-        if (_hoverPlayCellColumn != null && _hoverPlayCellRow != null)
-        {
+        if (_hoverPlayCellColumn != null && _hoverPlayCellRow != null) {
             // int? to int (can't be null anymore)
             int gameCellColumn = (int)_hoverPlayCellColumn;
             int gameCellRow = (int)_hoverPlayCellRow;
@@ -212,7 +210,7 @@ public partial class GameView : UserControl {
 
             // Transition from DockGrid to PlayGrid
             if (draggableParent != PlayGrid) {
-                RemoveTileFromDockGrid(draggable);
+                RemoveTileFromDockGrid(draggable, false);
                 AddTileToPlayGrid(draggable, gameCellColumn, gameCellRow);
             }
             // Move in PlayGrid if already in PlayGrid
@@ -269,7 +267,7 @@ public partial class GameView : UserControl {
         Panel.SetZIndex(draggable, 5);
     }
 
-    private Image _preview = new() {
+    private readonly Image _preview = new() {
         Opacity = 0.2,
 
         HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
@@ -286,12 +284,11 @@ public partial class GameView : UserControl {
 
     public void TileBlock_MouseMove(object sender, MouseEventArgs e) {
         _tileMoved = true;
-        var draggableControl = sender as Image;
-        if (IsDragging && draggableControl != null) {
+        if (IsDragging && sender is Image draggableControl) {
             Point currentPosition = e.GetPosition(this);
             var transform = draggableControl.RenderTransform as TranslateTransform ?? new TranslateTransform();
-            transform.X = _originTT.X + (currentPosition.X - _clickPosition.X) * GetActualWidthMultiplier();
-            transform.Y = _originTT.Y + (currentPosition.Y - _clickPosition.Y) * GetActualHeightMultiplier();
+            transform.X = _originTT.X + ((currentPosition.X - _clickPosition.X) * GetActualWidthMultiplier());
+            transform.Y = _originTT.Y + ((currentPosition.Y - _clickPosition.Y) * GetActualHeightMultiplier());
             draggableControl.RenderTransform = new TranslateTransform(transform.X, transform.Y);
 
             _preview.Source = draggableControl.Source;
@@ -318,7 +315,7 @@ public partial class GameView : UserControl {
 
             if (grid != null) {
                 if (!_previewActive) {
-                    grid.Children.Add(_preview);
+                    _ = grid.Children.Add(_preview);
                     Panel.SetZIndex(_preview, 4);
                 }
 
@@ -342,13 +339,16 @@ public partial class GameView : UserControl {
     private void LoadDock(Player player) {
         // Clear grid
         foreach (TileBlock tileBlock in _dockArray) {
-            if (tileBlock == null) continue;
-            RemoveTileFromDockGrid(tileBlock);
+            if (tileBlock == null)
+                continue;
+            RemoveTileFromDockGrid(tileBlock, false);
         }
 
         // Restore players dock
+        TileBlock[] dock = player.GetDock();
         for (int i = 0; i < _dockArray.Length; i++) {
-            AddTileToDockGrid(player.GetDock()[i], i);
+            if (dock[i] != null)
+                AddTileToDockGrid(dock[i], i);
         }
     }
 
@@ -356,7 +356,8 @@ public partial class GameView : UserControl {
         DockGridFill();
 
         foreach (TileBlock tileBlock in _dockArray) {
-            tileBlock.CancelExchangeMark();
+            if (tileBlock != null)
+                tileBlock.CancelExchangeMark();
         }
 
         // Rewrite players dock
@@ -364,7 +365,8 @@ public partial class GameView : UserControl {
 
         // Clear grid
         foreach (TileBlock tileBlock in _dockArray) {
-            RemoveTileFromDockGrid(tileBlock);
+            if (tileBlock != null)
+                RemoveTileFromDockGrid(tileBlock, false);
         }
     }
 
@@ -387,7 +389,6 @@ public partial class GameView : UserControl {
 
         List<string> invalidWords = new();
         List<string> wrongPlacedWords = new();
-        int score = 0;
 
         string info = "";
 
@@ -397,22 +398,24 @@ public partial class GameView : UserControl {
         if (wordsWithScore.Count <= 0) {
             List<char> exchangedTileBlocks = new();
             for (int i = 0; i < _dockArray.Length; i++) {
-                if (_dockArray[i].MarkedForExchange) {
-                    exchangedTileBlocks.Add(_dockArray[i].Tile.Character);
-                    RemoveTileFromDockGrid(_dockArray[i]);
-                    DockGridFill();
+                if (_dockArray[i] != null){
+                    if (_dockArray[i].MarkedForExchange) {
+                        exchangedTileBlocks.Add(_dockArray[i].Tile.Character);
+                        RemoveTileFromDockGrid(_dockArray[i], true);
+                        DockGridFill();
+                    }
                 }
             }
 
             info = exchangedTileBlocks.Count > 0 ? $"Vyměněná písmena: {string.Join(", ", exchangedTileBlocks)}" : "Tah přeskočen";
         }
         else {
-            foreach (var (word, wordScore) in wordsWithScore) {
+            foreach (var (word, _) in wordsWithScore) {
                 if (word[0] == '-')
-                    invalidWords.Add(word.Substring(1));
+                    invalidWords.Add(word[1..]);
 
                 if (word[0] == '_') {
-                    wrongPlacedWords.Add(word.Substring(1));
+                    wrongPlacedWords.Add(word[1..]);
                 }
             }
 
@@ -423,7 +426,7 @@ public partial class GameView : UserControl {
 
                 // Report to info bar
                 if (invalidWords.Count > 0 && wrongPlacedWords.Count > 0)
-                    info = string.Join("\r\n", new[] { infoInvalid, infoWrongPlaced });
+                    info = string.Join("\r\n", new { infoInvalid, infoWrongPlaced });
                 else if (invalidWords.Count > 0)
                     info = infoInvalid;
                 else if (wrongPlacedWords.Count > 0)
@@ -434,7 +437,7 @@ public partial class GameView : UserControl {
             }
 
             // Add all gained score and add to player
-            foreach (var (word, wordScore) in wordsWithScore) {
+            foreach (var (_, wordScore) in wordsWithScore) {
                 _playerArray[_currentPlayerIndex].Score += wordScore;
             }
 
@@ -460,6 +463,10 @@ public partial class GameView : UserControl {
         SaveDock(_playerArray[_currentPlayerIndex]);
         NextPlayer();
         ScoreBoardRender();
+
+        if (_playerArray.Length == 1) {
+            BtnNextPlayer.RaiseEvent(e);
+        }
     }
 
     private List<(string word, int score)> ValidatePlay() {
@@ -484,8 +491,7 @@ public partial class GameView : UserControl {
                 if (!continuous && newPlayArray[column, row] == null) {
                     if (_confirmedPlayArray[column, row] != null) {
                         predictedScore += GetLetterScore(column, row, false);
-                        if (predictedColumn == null)
-                            predictedColumn = column;
+                        predictedColumn ??= column;
                     }
                     // Throwing away predict - word doesnt follow
                     else {
@@ -530,11 +536,13 @@ public partial class GameView : UserControl {
                     endColumn = column;
                     possibleScore += GetLetterScore(column, row, true);
                     wordScoreMultiplier *= GetWordBonus(column, row);
-                } else if (continuous && _playArray[column, row] != null) {
+                }
+                else if (continuous && _playArray[column, row] != null) {
                     endColumn = column;
                     possibleScore += GetLetterScore(column, row, false);
                     connected = true;
-                } else if (continuous) {
+                }
+                else if (continuous) {
                     // Checking a single letter word, only here, checking all borders
                     bool single = false;
                     if (startColumn == endColumn)
@@ -592,8 +600,7 @@ public partial class GameView : UserControl {
                 if (!continuous && newPlayArray[column, row] == null) {
                     if (_confirmedPlayArray[column, row] != null) {
                         predictedScore += GetLetterScore(column, row, false);
-                        if (predictedRow == null)
-                            predictedRow = row;
+                        predictedRow ??= row;
                     }
                     // Throwing away predict - word doesnt follow
                     else {
@@ -605,7 +612,7 @@ public partial class GameView : UserControl {
                 // Found newly placed TileBlock
                 if (newPlayArray[column, row] != null) {
                     if (!continuous) {
-                        startRow =  row;
+                        startRow = row;
                         // Apply predicted values if the word follows an already placed letter
                         if (predictedRow != null) {
                             startRow = (int)predictedRow;
@@ -629,7 +636,7 @@ public partial class GameView : UserControl {
                     else if (column == 15) {
                         if (_confirmedPlayArray[column - 1, row] != null)
                             connected = true;
-                    } 
+                    }
                     else {
                         if (_confirmedPlayArray[column - 1, row] != null || _confirmedPlayArray[column + 1, row] != null)
                             connected = true;
@@ -638,11 +645,13 @@ public partial class GameView : UserControl {
                     endRow = row;
                     possibleScore += GetLetterScore(column, row, true);
                     wordScoreMultiplier *= GetWordBonus(column, row);
-                } else if (continuous && _playArray[column, row] != null) {
+                }
+                else if (continuous && _playArray[column, row] != null) {
                     endRow = row;
                     possibleScore += GetLetterScore(column, row, false);
                     connected = true;
-                } else if (continuous) {
+                }
+                else if (continuous) {
                     if (startRow != endRow) {
                         string word = GetWordFromPlayArray(startRow, endRow, column, false);
                         if (!string.IsNullOrEmpty(word)) {
@@ -713,11 +722,11 @@ public partial class GameView : UserControl {
     }
 
     private int GetWordBonus(int column, int row) {
-        switch (_bonusArray[column, row]) {
-            case BonusType.DoubleWord: return 2;
-            case BonusType.TripleWord: return 3;
-            default: return 1;
-        }
+        return _bonusArray[column, row] switch {
+            BonusType.DoubleWord => 2,
+            BonusType.TripleWord => 3,
+            _ => 1,
+        };
     }
 
     private TileBlock[,] GetNewPlayArray() {
@@ -752,24 +761,30 @@ public partial class GameView : UserControl {
             if (_dockArray[i] != null)
                 continue;
 
-            Tile tile = GetRandomAvailableTile();
-            TileBlock tileBlock = new TileBlock(tile, $"tile{tile.Character}.png");
-            AddTileToDockGrid(tileBlock, i);
+            (Tile, int)? tile = GetRandomAvailableTile();
+            if (tile != null) {
+                TileBlock tileBlock = new TileBlock(tile.Value.Item1, tile.Value.Item2, $"tile{tile.Value.Item1.Character}.png");
+                AddTileToDockGrid(tileBlock, i);
+            }
         }
     }
 
-    private Tile GetRandomAvailableTile() {
+    // Returns a random available Tile from the current set and an index of the Tile in the set
+    private (Tile, int)? GetRandomAvailableTile() {
         List<int> availableIndexes = new();
 
-        for (int i = 0; i < _sets[_currentSetIndex].UsedArray.Length; i++) {
-            if (!_sets[_currentSetIndex].UsedArray[i]) {
+        for (int i = 0; i < _sets[_currentSetIndex].TileArray.Length; i++) {
+            if (!_sets[_currentSetIndex].TileArray[i].Item2) {
                 availableIndexes.Add(i);
             }
         }
+
+        TbTilesRemaining.Text = availableIndexes.Count.ToString();
+
         if (availableIndexes.Count > 0) {
             int randomIndex = availableIndexes[Random.Shared.Next(0, availableIndexes.Count)];
-            _sets[_currentSetIndex].UsedArray[randomIndex] = true;
-            return _sets[_currentSetIndex].TileArray[randomIndex];
+            _sets[_currentSetIndex].TileArray[randomIndex].Item2 = true;
+            return (_sets[_currentSetIndex].TileArray[randomIndex].Item1, randomIndex);
         }
 
         return null;
@@ -783,16 +798,19 @@ public partial class GameView : UserControl {
                 TileBlock tile = _playArray[column, fixedIndex];
                 if (tile != null) {
                     word += tile.Tile.Character;
-                } else {
+                }
+                else {
                     return "";
                 }
             }
-        } else {
+        }
+        else {
             for (int row = start; row <= end; row++) {
                 TileBlock tile = _playArray[fixedIndex, row];
                 if (tile != null) {
                     word += tile.Tile.Character;
-                } else {
+                }
+                else {
                     return "";
                 }
             }
@@ -810,7 +828,7 @@ public partial class GameView : UserControl {
             FontWeight = FontWeights.SemiBold,
             Margin = new Thickness(0, 0, 0, 20)
         };
-        ScoreBoard.Children.Add(title);
+        _ = ScoreBoard.Children.Add(title);
 
         for (int i = 0; i < _playerArray.Length; i++) {
             TextBlock player = new() {
@@ -825,7 +843,7 @@ public partial class GameView : UserControl {
                 player.FontWeight = FontWeights.SemiBold;
             }
 
-            ScoreBoard.Children.Add(player);
+            _ = ScoreBoard.Children.Add(player);
         }
     }
 
@@ -836,7 +854,7 @@ public partial class GameView : UserControl {
             return;
 
         _playArray[column, row] = tileBlock;
-        PlayGrid.Children.Add(tileBlock);
+        _ = PlayGrid.Children.Add(tileBlock);
         Panel.SetZIndex(tileBlock, 5);
         Grid.SetColumn(tileBlock, column);
         Grid.SetRow(tileBlock, row);
@@ -863,13 +881,12 @@ public partial class GameView : UserControl {
         PlayGrid.Children.Remove(tileBlock);
     }
 
-    private void AddTileToDockGrid(TileBlock tileBlock, int column)
-    {
+    private void AddTileToDockGrid(TileBlock tileBlock, int column) {
         if (_dockArray[column] != null)
             return;
 
         _dockArray[column] = tileBlock;
-        DockGrid.Children.Add(tileBlock);
+        _ = DockGrid.Children.Add(tileBlock);
         Panel.SetZIndex(tileBlock, 5);
         Grid.SetColumn(tileBlock, column);
     }
@@ -897,10 +914,13 @@ public partial class GameView : UserControl {
         Grid.SetColumn(tileBlock2, column1);
     }
 
-    private void RemoveTileFromDockGrid(TileBlock tileBlock) {
+    private void RemoveTileFromDockGrid(TileBlock tileBlock, bool toExchange) {
         int column = Grid.GetColumn(tileBlock);
         _dockArray[column] = null;
         DockGrid.Children.Remove(tileBlock);
+
+        if (toExchange)
+            _sets[_currentSetIndex].TileArray[tileBlock.TileSetIndex].Item2 = false;
     }
 
     #endregion Tile manipulation
@@ -937,7 +957,8 @@ public partial class GameView : UserControl {
         if (!_escapeMenu) {
             EscapeMenu.IsEnabled = true;
             EscapeMenu.Visibility = Visibility.Visible;
-        } else {
+        }
+        else {
             EscapeMenu.IsEnabled = false;
             EscapeMenu.Visibility = Visibility.Hidden;
         }

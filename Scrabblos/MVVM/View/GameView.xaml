@@ -16,6 +16,19 @@
             <Border Height="2160" Width="2880"
                     BorderBrush="White" BorderThickness="1">
                 <Canvas Margin="0" Name="GameCanvas">
+                    <Grid Canvas.Left="2340" Canvas.Top="1540">
+                        <Image Height="552" Width="484" 
+                               Source="/Resources/tile_set.png"/>
+
+                        <TextBlock Name="TbTilesRemaining" Text="0"
+                                   FontSize="164" FontWeight="SemiBold"
+                                   Foreground="White"
+                                   Width="300"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Margin="86,256,0,0"/>
+                    </Grid>
 
                     <Grid Height="156" Width="2108"
                           Background="White" Canvas.Left="386" Canvas.Top="20">
@@ -71,6 +84,11 @@
                         </Grid.RowDefinitions>
                     </Grid>
 
+                    <TextBlock Name="TbDockInfo"
+                               Width="2880" Canvas.Top="1896"
+                               FontSize="36"
+                               TextAlignment="Center"/>
+
                     <Grid Name="ControlsGrid"
                           Height="80" Width="1066"
                           Canvas.Left="906" Canvas.Top="1985" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -78,15 +96,21 @@
                                 Click="RestoreDock_Click"
                                 Height="80" Width="80"
                                 HorizontalAlignment="Left"
-                                Background="RosyBrown"/>
+                                Background="RosyBrown">
+                            <Image Source="/Resources/replay.png"
+                                   Margin="6"/>
+                        </Button>
+
                         <Button Name="RoundApprove"
                                 Click="RoundApprove_Click"
                                 Height="80" Width="80"
                                 HorizontalAlignment="Right"
-                                Background="LightGreen"/>
+                                Background="LightGreen">
+                            <Image Source="/Resources/check.png"/>
+                        </Button>
                     </Grid>
 
-                    <Grid x:Name="DockGrid"
+                    <Grid Name="DockGrid"
                           Height="140" Width="840"
                           Canvas.Left="1019" Canvas.Top="1955"
                           Background="Wheat" ShowGridLines="True">

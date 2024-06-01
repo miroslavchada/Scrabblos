@@ -73,9 +73,29 @@ namespace Scrabblos.Properties {
         /// <summary>
         ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
         /// </summary>
+        internal static byte[] check {
+            get {
+                object obj = ResourceManager.GetObject("check", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
         internal static byte[] mirek {
             get {
                 object obj = ResourceManager.GetObject("mirek", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] replay {
+            get {
+                object obj = ResourceManager.GetObject("replay", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -96,6 +116,16 @@ namespace Scrabblos.Properties {
         internal static byte[] tile_ {
             get {
                 object obj = ResourceManager.GetObject("tile_", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Vyhledává lokalizovaný prostředek typu System.Byte[].
+        /// </summary>
+        internal static byte[] tile_set {
+            get {
+                object obj = ResourceManager.GetObject("tile_set", resourceCulture);
                 return ((byte[])(obj));
             }
         }

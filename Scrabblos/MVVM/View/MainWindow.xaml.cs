@@ -25,7 +25,8 @@ public partial class MainWindow : Window {
                     WindowStyle = WindowStyle.SingleBorderWindow;
                     WindowState = WindowState.Normal;
                     ResizeMode = ResizeMode.CanResize;
-                } else {
+                }
+                else {
                     WindowStyle = WindowStyle.None;
                     WindowState = WindowState.Maximized;
                     ResizeMode = ResizeMode.NoResize;
