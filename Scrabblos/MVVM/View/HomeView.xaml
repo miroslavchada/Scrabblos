@@ -64,6 +64,7 @@
 
                     <Button Content="Hra" Name="StartGame"
                             Click="StartGame_OnClick"
+                            IsDefault="True"
                             IsEnabled="False"
                             Command="{Binding NavigateToGameCommand}"
                             Height="100" Width="400"

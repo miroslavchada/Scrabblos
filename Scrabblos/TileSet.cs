@@ -11,7 +11,7 @@ internal class TileSet {
 
         List<(Tile, bool)> tilesTemp = new();
         foreach (var (tile, count) in tiles) {
-            for (int i = 0; i < count - 1; i++) {
+            for (int i = 0; i < count; i++) {
                 tilesTemp.Add((tile, false));
             }
         }
