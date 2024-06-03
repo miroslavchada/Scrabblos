@@ -13,9 +13,21 @@
              MouseMove="GameView_OnMouseMove">
     <Grid>
         <Viewbox Name="GameViewBox">
-            <Border Height="2160" Width="2880"
-                    BorderBrush="White" BorderThickness="1">
+            <Border Height="2160" Width="2880">
                 <Canvas Margin="0" Name="GameCanvas">
+                    <Grid Canvas.Left="2340" Canvas.Top="1540">
+                        <Image Height="552" Width="484" 
+                               Source="/Resources/tile_set.png"/>
+
+                        <TextBlock Name="TbTilesRemaining" Text="0"
+                                   FontSize="164" FontWeight="SemiBold"
+                                   Foreground="White"
+                                   Width="300"
+                                   TextAlignment="Center"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Margin="86,256,0,0"/>
+                    </Grid>
 
                     <Grid Height="156" Width="2108"
                           Background="White" Canvas.Left="386" Canvas.Top="20">
@@ -71,22 +83,33 @@
                         </Grid.RowDefinitions>
                     </Grid>
 
+                    <TextBlock Name="TbDockInfo"
+                               Width="2880" Canvas.Top="1896"
+                               FontSize="36"
+                               TextAlignment="Center"/>
+
                     <Grid Name="ControlsGrid"
                           Height="80" Width="1066"
                           Canvas.Left="906" Canvas.Top="1985" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <Button Name="RestoreDock"
-                                Click="RestoreDock_Click"
+                        <Button Name="BtnRestoreDock"
+                                Click="BtnRestoreDock_Click"
                                 Height="80" Width="80"
                                 HorizontalAlignment="Left"
-                                Background="RosyBrown"/>
-                        <Button Name="RoundApprove"
-                                Click="RoundApprove_Click"
+                                Background="RosyBrown">
+                            <Image Source="/Resources/replay.png"
+                                   Margin="6"/>
+                        </Button>
+
+                        <Button Name="BtnRoundApprove"
+                                Click="BtnRoundApprove_Click"
                                 Height="80" Width="80"
                                 HorizontalAlignment="Right"
-                                Background="LightGreen"/>
+                                Background="LightGreen">
+                            <Image Source="/Resources/check.png"/>
+                        </Button>
                     </Grid>
 
-                    <Grid x:Name="DockGrid"
+                    <Grid Name="DockGrid"
                           Height="140" Width="840"
                           Canvas.Left="1019" Canvas.Top="1955"
                           Background="Wheat" ShowGridLines="True">
@@ -111,21 +134,51 @@
                             Height="80" Width="300"
                             FontSize="36" HorizontalAlignment="Right" Canvas.Right="8" Canvas.Top="40" VerticalAlignment="Top"/>
 
-                    <Button Content="Hrát" x:Name="BtnNextPlayer"
+                    <Button Content="Hrát" Name="BtnNextPlayer"
                         Click="BtnNextPlayer_Click" IsEnabled="False" Visibility="Hidden"
                         Height="80" Width="300"
                         FontSize="36" Canvas.Right="8" Canvas.Top="1985" Canvas.Left="1290" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </Canvas>
             </Border>
         </Viewbox>
+        <Grid Name="WinnerScreen"
+              IsEnabled="false" Visibility="Hidden">
+            <Grid Background="Transparent">
+                <Viewbox>
+                    <Border Height="2160" Width="2880">
+                        <Grid Name="WinnerGrid"
+                              Height="400"
+                              Margin="0, 0, 0, 0">
+                            <Grid Background="Wheat" Opacity=".85"/>
+                            <StackPanel Name="WinnerStackPanel">
+                                <TextBlock Text="KONEC HRY"
+                                           TextAlignment="Center"
+                                           FontSize="86" FontWeight="SemiBold"
+                                           Foreground="Black"
+                                           Margin="0 42 0 0"/>
+
+                                <TextBlock Name="TbEndInfo"
+                                           Text="Způsob, jakým byla hra ukončena."
+                                           TextAlignment="Center"
+                                           FontSize="42" FontWeight="Regular"
+                                           Margin="0 12 0 12"/>
+                            </StackPanel>
+
+                            <TextBlock Text="Stiskněte mezerník [Space] pro návrat do hlavní nabídky"
+                                       TextAlignment="Center" VerticalAlignment="Bottom"
+                                       Margin="0, 0, 0, 18"
+                                       FontSize="36" FontWeight="SemiBold"/>
+                        </Grid>
+                    </Border>
+                </Viewbox>
+            </Grid>
+        </Grid>
         <Grid Name="EscapeMenu"
               IsEnabled="false" Visibility="Hidden">
-            <Grid Background="Black" Opacity=".7">
-            </Grid>
+            <Grid Background="Black" Opacity=".7"/>
             <Grid>
                 <Viewbox>
-                    <Border Height="2160" Width="2880"
-                            BorderBrush="White" BorderThickness="1">
+                    <Border Height="2160" Width="2880">
                         <StackPanel>
                             <TextBlock Text="HRA POZASTAVENA"
                                        TextAlignment="Center"
@@ -139,7 +192,7 @@
                                     FontSize="48" HorizontalAlignment="Center"
                                     Margin=" 0  192 0 0 "/>
 
-                            <Button Content="Zpět do menu"
+                            <Button Content="Zpět do menu" Name="BtnBackToMenu"
                                     Command="{Binding NavigateToHomeCommand}"
                                     Height="100" Width="400"
                                     FontSize="48" HorizontalAlignment="Center"

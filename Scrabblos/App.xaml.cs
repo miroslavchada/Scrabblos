@@ -16,17 +16,17 @@ public partial class App : Application {
         IServiceCollection services = new ServiceCollection();
 
         // Register ViewModels
-        services.AddSingleton<MainWindow>(provider => new MainWindow {
+        _ = services.AddSingleton<MainWindow>(provider => new MainWindow {
             DataContext = provider.GetRequiredService<MainViewModel>()
         });
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<HomeViewModel>();
-        services.AddSingleton<GameViewModel>();
+        _ = services.AddSingleton<MainViewModel>();
+        _ = services.AddSingleton<HomeViewModel>();
+        _ = services.AddSingleton<GameViewModel>();
 
         // Register navigation service
-        services.AddSingleton<INavigationService, NavigationService>();
+        _ = services.AddSingleton<INavigationService, NavigationService>();
         // Register navigation function
-        services.AddSingleton<Func<Type, ViewModel>>(serviceProvider => viewModelType => (ViewModel)serviceProvider.GetRequiredService(viewModelType));
+        _ = services.AddSingleton<Func<Type, ViewModel>>(serviceProvider => viewModelType => (ViewModel)serviceProvider.GetRequiredService(viewModelType));
 
         _serviceProvider = services.BuildServiceProvider();
     }

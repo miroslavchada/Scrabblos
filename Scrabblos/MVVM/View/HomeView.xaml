@@ -10,18 +10,17 @@
              Background="White">
     <Grid>
         <Viewbox>
-            <Border Height="2160" Width="2880"
-                    BorderBrush="Black" BorderThickness="1">
+            <Border Height="2160" Width="2880">
                 <StackPanel HorizontalAlignment="Center"
-                            Margin="0 36">
+                            Margin="0 144">
                     <TextBlock Text="Scrabblos"
-                               FontSize="116"
+                               FontSize="168"
                                TextAlignment="Center"/>
                     <TextBlock Text="Mirek GOTY v2.0"
                                FontSize="72"
                                TextAlignment="Center"/>
 
-                    <StackPanel Margin="0 64"
+                    <StackPanel Margin="0 96 0 0"
                                 Orientation="Horizontal">
                         <StackPanel Margin="16 0">
                             <TextBlock Text="Hráč 1" Name="Player1Label"
@@ -64,6 +63,7 @@
 
                     <Button Content="Hra" Name="StartGame"
                             Click="StartGame_OnClick"
+                            IsDefault="True"
                             IsEnabled="False"
                             Command="{Binding NavigateToGameCommand}"
                             Height="100" Width="400"

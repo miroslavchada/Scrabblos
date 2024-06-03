@@ -1,25 +1,20 @@
 ﻿namespace Scrabblos;
 
-class TileSet {
+internal class TileSet {
 
-    public string name { get; private set; } // Name of the tile set
+    public string Name { get; private set; } // Name of the Tile set
 
-    public Tile[] tileArray { private set; get; } // Array of tiles
-    public bool[] usedArray { private set; get; } // Array of availability of tiles
+    public (Tile, bool)[] TileArray { private set; get; } // Array of tiles and its availability
 
-    public TileSet(Dictionary<Tile, int> tiles, string name = "") {
-        this.name = name;
+    public TileSet(List<(Tile, int)> tiles, string name = "") {
+        Name = name;
 
-        List<Tile> tilesTemp = new();
-        List<bool> usedTemp = new();
-        foreach (var tileBundle in tiles) {
-            for (int i = 0; i < tileBundle.Value - 1; i++) {
-                tileBundle.Key.index = i;
-                tilesTemp.Add(tileBundle.Key);
-                usedTemp.Add(false);
+        List<(Tile, bool)> tilesTemp = new();
+        foreach (var (tile, count) in tiles) {
+            for (int i = 0; i < count; i++) {
+                tilesTemp.Add((tile, false));
             }
         }
-        tileArray = tilesTemp.ToArray();
-        usedArray = usedTemp.ToArray();
+        TileArray = tilesTemp.ToArray();
     }
 }

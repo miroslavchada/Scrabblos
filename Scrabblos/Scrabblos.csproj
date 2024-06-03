@@ -18,7 +18,9 @@
   <ItemGroup>
     <None Remove="MVVM\mirek.ico" />
     <None Remove="Resources\board.jpg" />
+    <None Remove="Resources\check.png" />
     <None Remove="Resources\mirek.ico" />
+    <None Remove="Resources\replay.png" />
     <None Remove="Resources\tileA.png" />
     <None Remove="Resources\tileB.png" />
     <None Remove="Resources\tileC.png" />
@@ -44,6 +46,7 @@
     <None Remove="Resources\tileY.png" />
     <None Remove="Resources\tileZ.png" />
     <None Remove="Resources\tile_.png" />
+    <None Remove="Resources\tile_set.png" />
     <None Remove="Resources\tileÁ.png" />
     <None Remove="Resources\tileÉ.png" />
     <None Remove="Resources\tileÍ.png" />
@@ -59,6 +62,12 @@
     <None Remove="Resources\tileŤ.png" />
     <None Remove="Resources\tileŮ.png" />
     <None Remove="Resources\tileŽ.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\check.png" />
+    <Resource Include="Resources\replay.png" />
+    <Resource Include="Resources\tile_set.png" />
   </ItemGroup>
 
   <ItemGroup>

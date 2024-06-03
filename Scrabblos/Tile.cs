@@ -1,14 +1,11 @@
 ﻿namespace Scrabblos;
 
 public class Tile {
-    public char character { private set; get; }
-    public int points { private set; get; }
-
-    // Index of the tile in the set (for tracking)
-    public int index = -1;
+    public char Character { private set; get; }
+    public int Points { private set; get; }
 
     public Tile(char character, int points) {
-        this.character = character;
-        this.points = points;
+        Character = character;
+        Points = points;
     }
 }
