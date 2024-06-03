@@ -145,8 +145,7 @@
               IsEnabled="false" Visibility="Hidden">
             <Grid Background="Transparent">
                 <Viewbox>
-                    <Border Height="2160" Width="2880"
-                            BorderBrush="White" BorderThickness="1">
+                    <Border Height="2160" Width="2880">
                         <Grid Name="WinnerGrid"
                               Height="400"
                               Margin="0, 0, 0, 0">
@@ -179,8 +178,7 @@
             <Grid Background="Black" Opacity=".7"/>
             <Grid>
                 <Viewbox>
-                    <Border Height="2160" Width="2880"
-                            BorderBrush="White" BorderThickness="1">
+                    <Border Height="2160" Width="2880">
                         <StackPanel>
                             <TextBlock Text="HRA POZASTAVENA"
                                        TextAlignment="Center"

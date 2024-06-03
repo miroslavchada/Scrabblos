@@ -130,7 +130,7 @@ public partial class GameView {
     private readonly char[] _allowedChars = {
         'A', 'Á', 'B', 'C', 'Č', 'D', 'Ď', 'E', 'É', 'Ě', 'F', 'G', 'H', 'I', 'Í', 'J', 'K', 'L', 'M', 'N', 'Ň', 'O', 'Ó', 'P', 'R', 'Ř', 'S', 'Š', 'T', 'Ť', 'U', 'Ú', 'Ů', 'V', 'X', 'Y', 'Ý', 'Z', 'Ž'
     };
-    private readonly bool _noDictionary = true;
+    private readonly bool _noDictionary = false;
 
     private readonly TileBlock?[,] _playArray = new TileBlock[15, 15];
     private readonly TileBlock?[,] _confirmedPlayArray = new TileBlock[15, 15];
@@ -479,10 +479,6 @@ public partial class GameView {
             }
             TbDockInfo.Text = $"{remainsStringInflected} {_roundSkipStreakMax - _roundSkipStreak} přeskočení konce hry.";
         }
-
-        if (_roundSkipStreak >= _roundSkipStreakMax) {
-            EndGame();
-        }
     }
 
     private void BtnRoundApprove_Click(object sender, RoutedEventArgs e) {
@@ -510,12 +506,15 @@ public partial class GameView {
             }
 
             RoundSkipped();
+
+            if (_roundSkipStreak >= _roundSkipStreakMax) {
+                EndGame();
+                return;
+            }
+
             info = exchangedTileBlocks.Count > 0 ? $"Vyměněná písmena: {string.Join(", ", exchangedTileBlocks)}" : "Tah přeskočen";
         }
         else {
-            // Resetting round skip streak
-            _roundSkipStreak = 0;
-
             // Check for invalid and wrongly placed words
             foreach (var (word, _) in wordsWithScore) {
                 if (word[0] == '-')
@@ -542,6 +541,10 @@ public partial class GameView {
                 TbInfo.Text = info;
                 return;
             }
+
+
+            // Resetting round skip streak
+            _roundSkipStreak = 0;
 
             // Add all gained score and add to player
             foreach (var (_, wordScore) in wordsWithScore) {
@@ -952,7 +955,7 @@ public partial class GameView {
 
         for (int i = 0; i < _playerArray!.Length; i++) {
             TextBlock player = new() {
-                Text = $"{i}) {_playerArray[i].Name}: {_playerArray[i].Score}",
+                Text = $"{i + 1}) {_playerArray[i].Name}: {_playerArray[i].Score}",
                 FontSize = 42,
                 FontWeight = FontWeights.Normal,
                 Margin = new Thickness(0, 0, 0, 3)
@@ -961,6 +964,8 @@ public partial class GameView {
             if (i == _currentPlayerIndex) {
                 player.FontSize = 48;
                 player.FontWeight = FontWeights.SemiBold;
+                player.Foreground = Brushes.White;
+                player.Background = Brushes.RoyalBlue;
             }
 
             _ = ScoreBoard.Children.Add(player);
@@ -1103,9 +1108,9 @@ public partial class GameView {
         BtnRoundApprove.Visibility = Visibility.Hidden;
         BtnPauseGame.Visibility = Visibility.Hidden;
         BtnNextPlayer.Visibility = Visibility.Hidden;
-        TbInfo.Visibility = Visibility.Hidden;
         TbDockInfo.Visibility = Visibility.Hidden;
         ScoreBoard.Visibility = Visibility.Hidden;
+        DockGrid.Visibility = Visibility.Hidden; 
         WinnerScreen.Visibility = Visibility.Visible;
         _gameEnded = true;
 
@@ -1131,7 +1136,7 @@ public partial class GameView {
             TbEndInfo.Text = $"{_playerArray[clearedPlayerIndex.Value].Name} se zbavil(a) všech svých kamenů.";
         }
         else {
-            TbEndInfo.Text = "Hra skončila po 4 po sobě jdoucích přeskočení.";
+            TbEndInfo.Text = $"Hra skončila po {_roundSkipStreakMax} po sobě jdoucích přeskočení.";
         }
 
         // Render winner screen
