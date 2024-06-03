@@ -163,7 +163,6 @@ public partial class GameView {
         { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None },
         { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
         { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord }
-    };
 
     private void SetPlayers(string[] players) {
         _playerArray = new Player[players.Length];
@@ -318,6 +317,7 @@ public partial class GameView {
         Panel.SetZIndex(draggable, 5);
     }
 
+
     private readonly Image _preview = new() {
         Opacity = 0.2,
 
@@ -407,6 +407,7 @@ public partial class GameView {
 
     private void NextPlayer() {
         _currentPlayerIndex = _currentPlayerIndex >= _playerArray!.Length - 1 ? 0 : _currentPlayerIndex + 1;
+        currentPlayerIndex = currentPlayerIndex >= playerArray.Length - 1 ? 0 : currentPlayerIndex + 1;
     }
 
     private void LoadDock(Player player) {

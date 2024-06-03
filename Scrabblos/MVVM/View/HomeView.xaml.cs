@@ -12,6 +12,7 @@ public partial class HomeView : UserControl {
         InitializeComponent();
     }
 
+
     private readonly List<string> _players = new();
 
     private void StartGame_OnClick(object sender, RoutedEventArgs e) {
@@ -23,6 +24,7 @@ public partial class HomeView : UserControl {
     }
 
     private void PlayerTextBox_OnTextChanged(object sender, TextChangedEventArgs e) {
+
         TextBox[] playerTb = { Player1TextBox, Player2TextBox, Player3TextBox, Player4TextBox };
         TextBlock[] playerLb = { Player1Label, Player2Label, Player3Label, Player4Label };
 

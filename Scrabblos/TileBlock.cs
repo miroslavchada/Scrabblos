@@ -39,7 +39,7 @@ internal class TileBlock : Image {
         MarkedForExchange = false;
         Opacity = 1;
     }
-
+  
     public void UnsubscribeInteraction() {
         MouseLeftButtonDown -= GameView.Instance.TileBlock_MouseLeftButtonDown;
         MouseLeftButtonUp -= GameView.Instance.TileBlock_MouseLeftButtonUp;

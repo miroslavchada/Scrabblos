@@ -129,7 +129,7 @@
                                 Canvas.Left="36" Canvas.Top="279">
                     </StackPanel>
 
-                    <Button Content="Pauza" Name="BtnPauseGame"
+                    <Button Content="Pauza" x:Name="BtnPauseGame"
                             Click="ToggleEscapeMenuButton"
                             Height="80" Width="300"
                             FontSize="36" HorizontalAlignment="Right" Canvas.Right="8" Canvas.Top="40" VerticalAlignment="Top"/>
