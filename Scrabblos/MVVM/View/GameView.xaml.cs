@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using Application = System.Windows.Application;
 using Image = System.Windows.Controls.Image;
@@ -163,6 +163,7 @@ public partial class GameView {
         { BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None },
         { BonusType.None, BonusType.DoubleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleWord, BonusType.None },
         { BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.None, BonusType.TripleWord, BonusType.None, BonusType.None, BonusType.None, BonusType.DoubleLetter, BonusType.None, BonusType.None, BonusType.TripleWord }
+        };
 
     private void SetPlayers(string[] players) {
         _playerArray = new Player[players.Length];
@@ -407,7 +408,6 @@ public partial class GameView {
 
     private void NextPlayer() {
         _currentPlayerIndex = _currentPlayerIndex >= _playerArray!.Length - 1 ? 0 : _currentPlayerIndex + 1;
-        currentPlayerIndex = currentPlayerIndex >= playerArray.Length - 1 ? 0 : currentPlayerIndex + 1;
     }
 
     private void LoadDock(Player player) {
@@ -482,6 +482,8 @@ public partial class GameView {
         }
     }
 
+    #region Word submitting and validation 
+
     private void BtnRoundApprove_Click(object sender, RoutedEventArgs e) {
         List<(string, int)> wordsWithScore = ValidatePlay();
 
@@ -507,7 +509,7 @@ public partial class GameView {
             }
 
             RoundSkipped();
-
+            
             if (_roundSkipStreak >= _roundSkipStreakMax) {
                 EndGame();
                 return;
@@ -867,6 +869,8 @@ public partial class GameView {
         return newPlayArray;
     }
 
+    #endregion Word submitting and validation 
+
     private void BtnNextPlayer_Click(object sender, RoutedEventArgs e) {
         ControlsGrid.IsEnabled = true;
         ControlsGrid.Visibility = Visibility.Visible;
@@ -1126,8 +1130,11 @@ public partial class GameView {
                 clearedPlayerIndex = i;
             }
             else {
-                unusedScore += _playerArray[i].GetDockCount();
+                unusedScore += _playerArray[i].GetDockValue();
             }
+
+            // Subtract player's dock value from his score
+            _playerArray[i].Score -= _playerArray[i].GetDockValue();
         }
 
         // If there is a player that has cleared his dock
@@ -1208,7 +1215,7 @@ public partial class GameView {
             _ = WinnerStackPanel.Children.Add(playerScore);
         }
 
-        // Add to winner sta height
+        // Add height to WinnerGrid
         WinnerGrid.Height += contentHeight;
     }
 }

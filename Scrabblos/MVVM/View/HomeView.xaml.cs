@@ -12,7 +12,6 @@ public partial class HomeView : UserControl {
         InitializeComponent();
     }
 
-
     private readonly List<string> _players = new();
 
     private void StartGame_OnClick(object sender, RoutedEventArgs e) {
